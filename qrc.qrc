@@ -1,0 +1,31 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/SerialManagerTools/SerialManagerConfig.qml</file>
+        <file>qml/SerialManagerTools/SerialManagerDeviceList.qml</file>
+        <file>qml/Style/AppBusyIndicator.qml</file>
+        <file>qml/Style/AppButton.qml</file>
+        <file>qml/Style/AppCancelButton.qml</file>
+        <file>qml/Style/AppCheckBox.qml</file>
+        <file>qml/Style/AppColorPicker.qml</file>
+        <file>qml/Style/AppComboBox.qml</file>
+        <file>qml/Style/AppLabel.qml</file>
+        <file>qml/Style/AppPopupDialog.qml</file>
+        <file>qml/Style/AppRectangle.qml</file>
+        <file>qml/Style/AppSlider.qml</file>
+        <file>qml/Style/AppStyle.qml</file>
+        <file>qml/Style/AppSwitch.qml</file>
+        <file>qml/Style/AppTabBarre.qml</file>
+        <file>qml/Style/AppTextField.qml</file>
+        <file>qml/Style/AppToolButton.qml</file>
+        <file>qml/Style/AppToolSeparator.qml</file>
+        <file>qml/Style/AppValidButton.qml</file>
+        <file>qml/Style/HueSlider.qml</file>
+        <file>qml/Style/qmldir</file>
+        <file>qml/Style/SBPicker.qml</file>
+        <file>qml/main.qml</file>
+        <file>qml/SerialManagerTools/SerialManagerDataViewer.qml</file>
+        <file>qml/SerialManagerTools/DataLine.qml</file>
+        <file>qml/SerialManagerTools/SerialDataElement.qml</file>
+        <file>qml/SerialManagerTools/SerialManagerLineSender.qml</file>
+    </qresource>
+</RCC>
