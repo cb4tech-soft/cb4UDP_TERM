@@ -4,14 +4,19 @@
 #include <QSerialPort>
 #include <QSerialPortInfo>
 #include <QDebug>
+#include <QFileDialog>
+#include <QStandardPaths>
 
 SerialInfo serialInfo;
+
 
 SerialManager::SerialManager(QObject *parent) : QObject(parent)
 {
     setIsConnected(0);
     port = nullptr;
-
+    timer = new QTimer(this);
+    timer->setSingleShot(true);
+    connect(timer, &QTimer::timeout, this, &SerialManager::dataAvailable);
 }
 
 void SerialManager::registerQml()
@@ -77,13 +82,6 @@ void SerialManager::disconnectFromPort()
 
 }
 
-
-
-QString SerialManager::readAll()
-{
-    return port->readAll();
-}
-
 bool SerialManager::isLineAvailable()
 {
     if (port && port->canReadLine())
@@ -94,10 +92,17 @@ bool SerialManager::isLineAvailable()
 
 void SerialManager::checkData()
 {
+    qDebug() << "CheckData !";
     if (port->canReadLine())
         emit lineAvailable();
-    emit dataAvailable();
-
+    //emit dataAvailable();
+    else if(port->bytesAvailable()) {
+        if(port->bytesAvailable() > BUFFERSIZE) {
+            emit dataAvailable();
+       } else {
+            timer->start(100);
+        }
+    }
 }
 
 void SerialManager::errorHandler(QSerialPort::SerialPortError error)
@@ -134,7 +139,8 @@ void SerialManager::errorHandler(QSerialPort::SerialPortError error)
     break;
     default:
         setIsConnected(0);
-        qDebug() << " => Error occured";
+        qDebug() << " => State : ";
+        qDebug() << error;
     break;
     }
 }
@@ -142,6 +148,11 @@ void SerialManager::errorHandler(QSerialPort::SerialPortError error)
 QString SerialManager::readLine()
 {
     return port->readLine();
+}
+
+QString SerialManager::readAll()
+{
+    return port->readAll();
 }
 
 void SerialManager::sendData(QList<int> dataOut)
@@ -163,6 +174,20 @@ void SerialManager::sendString(QString dataOut)
     {
         port->write(dataOut.toLocal8Bit());
     }
+}
+
+void SerialManager::saveToFile(QStringList dataList)
+{
+    //qDebug() << dataList;
+    /*QString caption = "Select destination";
+    QString defaultPath = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+    QString filter = tr("All files (*.*)");
+    //QFileDialog(this, caption, defaultPath, filter);
+    QFileDialog *file = new QFileDialog();
+    file->setDirectory(defaultPath);
+    file->setWindowTitle(caption);
+    file->show();*/
+    QFileDialog::getExistingDirectory();
 }
 
 SerialInfo *SerialManager::getStaticInfoInstance()

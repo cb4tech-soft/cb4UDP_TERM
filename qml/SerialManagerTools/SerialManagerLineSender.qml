@@ -12,24 +12,17 @@ AppRectangle {
     signal sendStringData(var stringData);
     signal sendHexaData(var hexaData);
 
+    function splitMulti(str, tokens){
+            var tempChar = tokens[0];
+            for(var i = 1; i < tokens.length; i++){
+                str = str.split(tokens[i]).join(tempChar);
+            }
+            str = str.split(tempChar);
+            return str;
+    }
+
     function triggerSend() {
         var stringToSend = textLine.text
-        if(switchHex.checked) {
-            var bytes = stringData.split(/[!\s_]+/);
-            var ok = true;
-            var count = 0
-            var hexaBytes = []
-            while(ok && count < bytes.length) {
-                hexaBytes[count] = parseInt(bytes[count], 16)
-                if(hexaBytes[count] > 0xFF) {
-                    ok = false
-                    hexaBytes = []
-                    Console.log("Hexa conversion error.")
-                }
-                count++
-            }
-            stringToSend = hexaBytes
-        }
         switch(comboCLRF.currentIndex) {
             case 0:
                 //stringToSend.replace('\n', '')
@@ -44,12 +37,31 @@ AppRectangle {
                 stringToSend+= "\r"
                 break
             case 3:
+                stringToSend+= "\r\n"
                 break
         }
-        if(switchHex.checked)
+        if(switchHex.checked) {
+            var bytes = splitMulti(stringToSend, [' ', ',', '-', ';'])
+            //var bytes = stringToSend.split(',')
+            var ok = true;
+            var count = 0
+            var hexaBytes = []
+            while(ok && count < bytes.length) {
+                hexaBytes.push(parseInt(bytes[count], 16))
+                console.log(hexaBytes[count] + " - " + bytes[count])
+                if(hexaBytes[count] > 0xFF) {
+                    ok = false
+                    hexaBytes = []
+                    console.log("Hexa conversion error.")
+                }
+                count++
+            }
+            console.log(stringToSend)
+            stringToSend = hexaBytes
             sendHexaData(stringToSend)
-        else
+       } else {
             sendStringData(stringToSend)
+        }
     }
 
     focus: true
@@ -81,7 +93,7 @@ AppRectangle {
         anchors.leftMargin: 5
         anchors.rightMargin: 86
         largeSeparator: true
-
+        placeholderText: "Hello World!"
 
     }
 
@@ -90,6 +102,13 @@ AppRectangle {
         anchors.right: sendButton.left
         anchors.top: parent.top
         text: "Hex  "
+        onClicked: {
+            if(this.checked)
+                textLine.placeholderText = "128,1,2,3"
+            else
+                textLine.placeholderText = "Hello World!"
+
+        }
     }
 
     AppComboBox {

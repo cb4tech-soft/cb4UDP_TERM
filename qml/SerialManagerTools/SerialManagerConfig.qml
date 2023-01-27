@@ -215,14 +215,20 @@ AppRectangle {
         anchors.topMargin: 40
         anchors.horizontalCenter: parent.horizontalCenter
         onClicked: {
-            if (serialConfig.manager)
+            if (!serialConfig.manager.isConnected)
             {
                 serialConfig.manager.baudrate = serialConfig.baudrate
+                serialConfig.manager.dataBits = serialConfig.dataBits
+                serialConfig.manager.flowControl = serialConfig.flowControl
+                serialConfig.manager.parity = serialConfig.parity
+                serialConfig.manager.stopBits = serialConfig.stopBits
                 serialConfig.manager.connectToPort(serialConfig.port)
+                this.text = "Disconnection"
             }
             else
             {
-                connectClicked()
+                serialConfig.manager.disconnectFromPort();
+                this.text = "Connection"
             }
         }
     }

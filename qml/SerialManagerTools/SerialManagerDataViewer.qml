@@ -1,5 +1,6 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.12
+import Qt.labs.platform 1.1
 import  "../Style"
 import SerialManager 1.0
 
@@ -12,7 +13,14 @@ AppRectangle {
 
     property SerialManager manager
 
-
+    function logToText() {
+        var chaine =[]
+        for(let i = 0; i < serialData.count; i++)
+            chaine.push(serialData.get(i).serData)
+        //manager.saveToFile(chaine)
+        console.log(chaine)
+        folderDialog.open()
+    }
 
     function lineUpdate()
     {
@@ -26,10 +34,15 @@ AppRectangle {
         }
     }
 
+    function dataUpdate() {
+        var data = manager.readAll()
+        append(data)
+    }
+
     Connections {
         target: manager
         function onLineAvailable(){ lineUpdate() }
-
+        function onDataAvailable(){ dataUpdate() }
     }
 
 
@@ -88,6 +101,16 @@ AppRectangle {
         serialData.append({"timestamp": dateString ,"serData": outData, "isSend": false})
     }
 
+    FolderDialog{
+        id: folderDialog
+        folder: StandardPaths.writableLocation(StandardPaths.DocumentsLocation)
+        title: "Select save destination :"
+        onAccepted: {
+                console.log("You chose: " + fileDialog.fileUrls)
+//                Qt.quit()
+            }
+    }
+
     Item {
         id: dataViewController
         height: 40
@@ -112,12 +135,12 @@ AppRectangle {
             AppButton{
                 id:ctrlSave
                 text: "Save Log"
-                onClicked: serialData.clear()
+                onClicked: logToText()
                 height: parent.height
             }
             AppCheckBox{
                 id: ctrlTime
-                text: "show Time"
+                text: "Show Time"
                 checkable: true
                 checked: true
                 height: parent.height
