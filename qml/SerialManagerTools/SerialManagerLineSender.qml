@@ -32,15 +32,15 @@ AppRectangle {
         }
         switch(comboCLRF.currentIndex) {
             case 0:
-                stringToSend.replace('\n', '')
-                stringToSend.replace('\r', '')
+                //stringToSend.replace('\n', '')
+                //stringToSend.replace('\r', '')
                 break
             case 1:
-                stringToSend.replace('\r', '')
+                //stringToSend.replace('\r', '')
                 stringToSend+= "\n"
                 break
             case 2:
-                stringToSend.replace('\n', '')
+                //stringToSend.replace('\n', '')
                 stringToSend+= "\r"
                 break
             case 3:
