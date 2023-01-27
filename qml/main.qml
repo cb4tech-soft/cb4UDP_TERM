@@ -71,7 +71,7 @@ AppRectangle {
             SerialTool.SerialManagerLineSender {
                 id: serialManagerLineSender
                 y: 0
-                height: 50
+                height: 80
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
@@ -80,8 +80,8 @@ AppRectangle {
                 anchors.leftMargin: 5
                 manager : serManager
                 onSendStringData: dataViewer.sendString(stringData)
+                onSendHexaData: dataViewer.send(hexaData)
             }
-
         }
 
 

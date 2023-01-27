@@ -109,6 +109,12 @@ AppRectangle {
                 onClicked: serialData.clear()
                 height: parent.height
             }
+            AppButton{
+                id:ctrlSave
+                text: "Save Log"
+                onClicked: serialData.clear()
+                height: parent.height
+            }
             AppCheckBox{
                 id: ctrlTime
                 text: "show Time"

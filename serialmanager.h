@@ -31,8 +31,16 @@ class SerialManager : public QObject
     Q_OBJECT
 
     Q_PROPERTY(int baudrate READ baudrate WRITE setBaudrate NOTIFY baudrateChanged);
-    Q_PROPERTY(int isConnected READ isConnected WRITE setIsConnected NOTIFY isConnectedChanged)
-    Q_ENUMS(QSerialPort::BaudRate)
+    Q_PROPERTY(int dataBits READ dataBits WRITE setDataBits NOTIFY dataBitsChanged);
+    Q_PROPERTY(int flowControl READ flowControl WRITE setFlowControl NOTIFY flowControlChanged);
+    Q_PROPERTY(int parity READ parity WRITE setParity NOTIFY parityChanged);
+    Q_PROPERTY(int stopBits READ stopBits WRITE setStopBits NOTIFY stopBitsChanged);
+    Q_PROPERTY(int isConnected READ isConnected WRITE setIsConnected NOTIFY isConnectedChanged);
+    Q_ENUMS(QSerialPort::BaudRate);
+    Q_ENUMS(QSerialPort::DataBits);
+    Q_ENUMS(QSerialPort::FlowControl);
+    Q_ENUMS(QSerialPort::Parity);
+    Q_ENUMS(QSerialPort::StobBits);
 
 public:
     explicit SerialManager(QObject *parent = nullptr);
@@ -55,7 +63,17 @@ public:
     int baudrate() const;
     void setBaudrate(int newBaudrate);
 
+    int dataBits() const;
+    void setDataBits(int newDataBits);
 
+    int flowControl() const;
+    void setFlowControl(int newFlowControl);
+
+    int parity() const;
+    void setParity(int newParity);
+
+    int stopBits() const;
+    void setStopBits(int newStopBits);
 
     int isConnected() const;
     void setIsConnected(int newIsConnected);
@@ -65,6 +83,11 @@ signals:
     void lineAvailable();
 
     void baudrateChanged();
+    void dataBitsChanged();
+    void flowControlChanged();
+    void parityChanged();
+    void stopBitsChanged();
+
 
     void isConnectedChanged();
 
@@ -77,6 +100,10 @@ private:
     SerialInfo *info;
 
     int m_baudrate = 19200;
+    int m_dataBits = 8;
+    int m_flowControl = 0;
+    int m_parity = 0;
+    int m_stopBits = 0;
     int m_isConnected;
 };
 

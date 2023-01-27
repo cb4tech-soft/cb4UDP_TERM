@@ -128,6 +128,14 @@ void SerialManager::errorHandler(QSerialPort::SerialPortError error)
         setIsConnected(0);
         qDebug() << " => Device Timeout";
     break;
+    case QSerialPort::SerialPortError::ParityError:
+        setIsConnected(0);
+        qDebug() << " => Parity Error";
+    break;
+    default:
+        setIsConnected(0);
+        qDebug() << " => Error occured";
+    break;
     }
 }
 
@@ -179,6 +187,128 @@ void SerialManager::setBaudrate(int newBaudrate)
         port->setBaudRate(newBaudrate);
     }
     emit baudrateChanged();
+}
+
+int SerialManager::dataBits() const
+{
+    return m_dataBits;
+}
+
+void SerialManager::setDataBits(int newDataBits)
+{
+    if (m_dataBits == newDataBits)
+        return;
+    m_dataBits = newDataBits;
+    if (port && port->isOpen())
+    {
+        qDebug() << "Change data bits for " << port->portName();
+       switch(newDataBits) {
+            case 5:
+                port->setDataBits(QSerialPort::Data5);
+                break;
+            case 6:
+                port->setDataBits(QSerialPort::Data6);
+                break;
+            case 7:
+                port->setDataBits(QSerialPort::Data7);
+                break;
+            case 8:
+                port->setDataBits(QSerialPort::Data8);
+                break;
+       };
+    }
+    emit dataBitsChanged();
+}
+
+int SerialManager::flowControl() const
+{
+    return m_flowControl;
+}
+
+void SerialManager::setFlowControl(int newFlowControl)
+{
+    if (m_flowControl == newFlowControl)
+        return;
+    m_flowControl = newFlowControl;
+    if (port && port->isOpen())
+    {
+        qDebug() << "Change flow control for " << port->portName();
+        switch(newFlowControl) {
+            case 0:
+                port->setFlowControl(QSerialPort::NoFlowControl);
+                break;
+            case 1:
+                port->setFlowControl(QSerialPort::HardwareControl);
+                break;
+            case 2:
+                port->setFlowControl(QSerialPort::SoftwareControl);
+                break;
+        };
+    }
+    emit flowControlChanged();
+}
+
+int SerialManager::parity() const
+{
+    return m_parity;
+}
+
+void SerialManager::setParity(int newParity)
+{
+    if (m_parity == newParity)
+        return;
+    m_parity = newParity;
+    if (port && port->isOpen())
+    {
+        qDebug() << "Change parity for " << port->portName();
+        switch(newParity) {
+            case 0:
+                port->setParity(QSerialPort::NoParity);
+                break;
+            case 1:
+                port->setParity(QSerialPort::EvenParity);
+                break;
+            case 2:
+                port->setParity(QSerialPort::OddParity);
+                break;
+            case 3:
+                port->setParity(QSerialPort::SpaceParity);
+                break;
+            case 4:
+                port->setParity(QSerialPort::MarkParity);
+                break;
+
+        };
+    }
+    emit parityChanged();
+}
+
+int SerialManager::stopBits() const
+{
+    return m_stopBits;
+}
+
+void SerialManager::setStopBits(int newStopBits)
+{
+    if (m_stopBits == newStopBits)
+        return;
+    m_stopBits = newStopBits;
+    if (port && port->isOpen())
+    {
+        qDebug() << "Change parity for " << port->portName();
+        switch(newStopBits) {
+            case 0:
+                port->setStopBits(QSerialPort::OneStop);
+                break;
+            case 1:
+                port->setStopBits(QSerialPort::OneAndHalfStop);
+                break;
+            case 2:
+                port->setStopBits(QSerialPort::TwoStop);
+                break;
+        };
+    }
+    emit stopBitsChanged();
 }
 
  QStringList SerialInfo::getPortList()
