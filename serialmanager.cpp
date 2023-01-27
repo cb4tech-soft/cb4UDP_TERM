@@ -7,6 +7,8 @@
 
 SerialInfo serialInfo;
 
+
+
 SerialManager::SerialManager(QObject *parent) : QObject(parent)
 {
     setIsConnected(0);
@@ -44,8 +46,12 @@ void SerialManager::connectToPort(QString portName)
 {
     if (port)
     {
-        if (port->isOpen()) port->close();
-        delete port;
+        if (port->isOpen())
+        {
+            qDebug()<< "disconnect from " << portName;
+            port->close();
+        }
+            delete port;
         port = nullptr;
         setIsConnected(0);
     }
@@ -94,6 +100,7 @@ bool SerialManager::isLineAvailable()
 
 void SerialManager::checkData()
 {
+    qDebug() << "receiveData";
     if (port->canReadLine())
         emit lineAvailable();
     emit dataAvailable();
@@ -104,6 +111,9 @@ void SerialManager::errorHandler(QSerialPort::SerialPortError error)
 {
     switch (error)
     {
+    case QSerialPort::SerialPortError::NoError:
+        qDebug() << " => No error found";
+        break;
     case QSerialPort::SerialPortError::DeviceNotFoundError:
         setIsConnected(0);
         qDebug() << " => Device Not Found";
@@ -134,8 +144,22 @@ void SerialManager::errorHandler(QSerialPort::SerialPortError error)
     break;
     default:
         setIsConnected(0);
-        qDebug() << " => Error occured";
+        qDebug() << " => unknow Error occured";
     break;
+    }
+}
+
+void SerialManager::showPortInfo()
+{
+    if (port)
+    {
+        qDebug()<< "open : " << port->isOpen();
+        qDebug()<< "Portname : " << port->portName();
+        qDebug()<< "Baudrate : " << port->baudRate();
+        qDebug()<< "DataBits : " << port->dataBits();
+        qDebug()<< "FlowControl : " << port->flowControl();
+        qDebug()<< "Parity : " << port->parity();
+        qDebug()<< "StopBits : " << port->stopBits();
     }
 }
 
@@ -159,9 +183,12 @@ void SerialManager::sendData(QList<int> dataOut)
 
 void SerialManager::sendString(QString dataOut)
 {
+    qDebug() << "send_String" << dataOut;
+    showPortInfo();
     if (port && port->isOpen())
     {
         port->write(dataOut.toLocal8Bit());
+        qDebug() << "write success" << dataOut;
     }
 }
 
@@ -201,7 +228,7 @@ void SerialManager::setDataBits(int newDataBits)
     m_dataBits = newDataBits;
     if (port && port->isOpen())
     {
-        qDebug() << "Change data bits for " << port->portName();
+        qDebug() << "Change data bits for " << port->portName() << " to " << newDataBits;
        switch(newDataBits) {
             case 5:
                 port->setDataBits(QSerialPort::Data5);
@@ -317,9 +344,7 @@ void SerialManager::setStopBits(int newStopBits)
     QStringList result;
     foreach (const QSerialPortInfo &info, portList)
     {
-
         result.append(info.portName());
-
     }
     return result;
  }
