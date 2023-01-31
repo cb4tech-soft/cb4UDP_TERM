@@ -176,7 +176,7 @@ void SerialManager::sendString(QString dataOut)
     }
 }
 
-void SerialManager::saveToFile(QStringList dataList)
+void SerialManager::saveToFile(QStringList dataList, QString filepath, bool timestampsEnabled)
 {
     //qDebug() << dataList;
     /*QString caption = "Select destination";
@@ -187,7 +187,35 @@ void SerialManager::saveToFile(QStringList dataList)
     file->setDirectory(defaultPath);
     file->setWindowTitle(caption);
     file->show();*/
-    QFileDialog::getExistingDirectory();
+    //QFileDialog::getExistingDirectory();
+    QString stringLog = "";
+    if(timestampsEnabled) {
+        for(int i = 0; i < dataList.size(); i++) {
+            stringLog.append(dataList[i]);
+            if(i % 2 != 0)
+                stringLog.append("\n");
+        }
+    } else {
+        for(int i = 0; i < dataList.size(); i++) {
+            stringLog.append(dataList[i]);
+            stringLog.append("\n");
+        }
+    }
+    QFile *file = new QFile();
+    int count = 0;
+    bool notExist = false;
+    while(!notExist) {
+        QString path = filepath + "termLog" + QString::number(count);
+        file->setFileName(path);
+        if(file->exists()) {
+            count++;
+        } else {
+            notExist = true;
+        }
+    }
+    QTextStream fileIn(file);
+    fileIn << stringLog;
+    file->close();
 }
 
 SerialInfo *SerialManager::getStaticInfoInstance()

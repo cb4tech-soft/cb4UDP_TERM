@@ -56,7 +56,7 @@ public:
     Q_INVOKABLE QString readLine();
     Q_INVOKABLE void sendData(QList<int> dataOut);
     Q_INVOKABLE void sendString(QString dataOut);
-    Q_INVOKABLE void saveToFile(QStringList dataList);
+    Q_INVOKABLE void saveToFile(QStringList dataList, QString filepath, bool timestampsEnabled);
 
 
     static SerialInfo *getStaticInfoInstance();

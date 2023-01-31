@@ -15,11 +15,12 @@ AppRectangle {
 
     function logToText() {
         var chaine =[]
-        for(let i = 0; i < serialData.count; i++)
+        for(let i = 0; i < serialData.count; i++) {
+            if(ctrlTime.checked)
+                chaine.push(serialData.get(i).timestamp)
             chaine.push(serialData.get(i).serData)
-        //manager.saveToFile(chaine)
-        console.log(chaine)
-        folderDialog.open()
+        }
+        return chaine;
     }
 
     function lineUpdate()
@@ -102,11 +103,13 @@ AppRectangle {
     }
 
     FolderDialog{
-        id: folderDialog
+        id: saveDialog
         folder: StandardPaths.writableLocation(StandardPaths.DocumentsLocation)
         title: "Select save destination :"
         onAccepted: {
-
+                        var log = logToText()
+                        console.log(this.currentFolder)
+                        manager.saveToFile(log, this.currentFolder, ctrlTime.checked)
             }
     }
 
@@ -134,7 +137,7 @@ AppRectangle {
             AppButton{
                 id:ctrlSave
                 text: "Save Log"
-                onClicked: logToText()
+                onClicked: saveDialog.open()
                 height: parent.height
             }
             AppCheckBox{
