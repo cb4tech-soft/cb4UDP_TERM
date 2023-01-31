@@ -32,7 +32,7 @@ AppRectangle {
         SerialTool.SerialManagerConfig{
             id:serialConfig
             width:200
-            SplitView.preferredWidth: 130
+            SplitView.preferredWidth: 140
             manager: serManager
         }
 

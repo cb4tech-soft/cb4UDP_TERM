@@ -106,8 +106,7 @@ AppRectangle {
         folder: StandardPaths.writableLocation(StandardPaths.DocumentsLocation)
         title: "Select save destination :"
         onAccepted: {
-                console.log("You chose: " + fileDialog.fileUrls)
-//                Qt.quit()
+
             }
     }
 

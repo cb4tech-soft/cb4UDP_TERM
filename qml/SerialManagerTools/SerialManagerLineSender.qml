@@ -23,7 +23,7 @@ AppRectangle {
 
     function triggerSend() {
         var stringToSend = textLine.text
-        switch(comboCLRF.currentIndex) {
+        switch(comboCRLF.currentIndex) {
             case 0:
                 //stringToSend.replace('\n', '')
                 //stringToSend.replace('\r', '')
@@ -86,12 +86,14 @@ AppRectangle {
     AppTextField{
         id: textLine
         anchors.left: parent.left
-        anchors.right: switchHex.left
+        anchors.right: comboCRLF.left
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         horizontalAlignment: Text.AlignLeft
         anchors.leftMargin: 5
-        anchors.rightMargin: 86
+        anchors.rightMargin: 5
+        anchors.topMargin: 5
+        anchors.bottomMargin: 5
         largeSeparator: true
         placeholderText: "Hello World!"
 
@@ -104,7 +106,7 @@ AppRectangle {
         text: "Hex  "
         onClicked: {
             if(this.checked)
-                textLine.placeholderText = "128,1,2,3"
+                textLine.placeholderText = "80,1,2,3"
             else
                 textLine.placeholderText = "Hello World!"
 
@@ -112,11 +114,11 @@ AppRectangle {
     }
 
     AppComboBox {
-        id: comboCLRF
+        id: comboCRLF
         anchors.right: sendButton.left
         anchors.top:switchHex.bottom
         model: ["No CRLF", "Line feed", "Carriage return", "Both"]
-        height: 40
+        height: 37
         anchors.rightMargin: 5
     }
 }
