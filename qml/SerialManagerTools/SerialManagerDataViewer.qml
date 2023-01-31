@@ -16,8 +16,14 @@ AppRectangle {
     function logToText() {
         var chaine =[]
         for(let i = 0; i < serialData.count; i++) {
-            if(ctrlTime.checked)
-                chaine.push(serialData.get(i).timestamp)
+            if(ctrlTime.checked) {
+                //This needs to be improved...
+                var timehtml = serialData.get(i).timestamp
+                var timestamp = timehtml.replace("<font color=\"grey\">", "");
+                timestamp = timestamp.replace("</font>", "");
+                timestamp+= " : "
+                chaine.push(timestamp)
+            }
             chaine.push(serialData.get(i).serData)
         }
         return chaine;

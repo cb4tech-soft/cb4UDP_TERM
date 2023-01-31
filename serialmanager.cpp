@@ -189,6 +189,7 @@ void SerialManager::saveToFile(QStringList dataList, QString filepath, bool time
     file->show();*/
     //QFileDialog::getExistingDirectory();
     QString stringLog = "";
+    filepath.remove(0, 7);
     if(timestampsEnabled) {
         for(int i = 0; i < dataList.size(); i++) {
             stringLog.append(dataList[i]);
@@ -205,7 +206,7 @@ void SerialManager::saveToFile(QStringList dataList, QString filepath, bool time
     int count = 0;
     bool notExist = false;
     while(!notExist) {
-        QString path = filepath + "termLog" + QString::number(count);
+        QString path = filepath + "/termLog" + QString::number(count) + ".txt";
         file->setFileName(path);
         if(file->exists()) {
             count++;
@@ -213,9 +214,14 @@ void SerialManager::saveToFile(QStringList dataList, QString filepath, bool time
             notExist = true;
         }
     }
-    QTextStream fileIn(file);
-    fileIn << stringLog;
-    file->close();
+    if (file->open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QTextStream fileIn(file);
+        fileIn << stringLog;
+        file->close();
+    } else {
+       qDebug("File opening problem.");
+       qDebug() << file->fileName();
+    }
 }
 
 SerialInfo *SerialManager::getStaticInfoInstance()

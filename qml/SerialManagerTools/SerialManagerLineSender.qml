@@ -46,20 +46,27 @@ AppRectangle {
             var ok = true;
             var count = 0
             var hexaBytes = []
+            var error = false
             while(ok && count < bytes.length) {
                 hexaBytes.push(parseInt(bytes[count], 16))
                 console.log(hexaBytes[count] + " - " + bytes[count])
                 if(hexaBytes[count] > 0xFF) {
                     ok = false
                     hexaBytes = []
+                    textLine.background.color = "pink"
                     console.log("Hexa conversion error.")
+                    error = true
                 }
                 count++
             }
             console.log(stringToSend)
-            stringToSend = hexaBytes
-            sendHexaData(stringToSend)
+            if(!error) {
+                textLine.background.color = AppStyle.backgroundLight
+                stringToSend = hexaBytes
+                sendHexaData(stringToSend)
+            }
        } else {
+            textLine.background.color = AppStyle.backgroundLight
             sendStringData(stringToSend)
         }
     }
@@ -95,6 +102,7 @@ AppRectangle {
         anchors.topMargin: 5
         anchors.bottomMargin: 5
         largeSeparator: true
+        enabled: serialConfig.manager.isConnected
         placeholderText: "Hello World!"
 
     }
@@ -109,7 +117,6 @@ AppRectangle {
                 textLine.placeholderText = "80,1,2,3"
             else
                 textLine.placeholderText = "Hello World!"
-
         }
     }
 
