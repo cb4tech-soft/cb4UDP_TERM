@@ -1,5 +1,6 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.12
+import Qt.labs.platform 1.1
 import  "../Style"
 import SerialManager 1.0
 
@@ -12,7 +13,21 @@ AppRectangle {
 
     property SerialManager manager
 
-
+    function logToText() {
+        var chaine =[]
+        for(let i = 0; i < serialData.count; i++) {
+            if(ctrlTime.checked) {
+                //This needs to be improved...
+                var timehtml = serialData.get(i).timestamp
+                var timestamp = timehtml.replace("<font color=\"grey\">", "");
+                timestamp = timestamp.replace("</font>", "");
+                timestamp+= " : "
+                chaine.push(timestamp)
+            }
+            chaine.push(serialData.get(i).serData)
+        }
+        return chaine;
+    }
 
     function lineUpdate()
     {
@@ -26,10 +41,15 @@ AppRectangle {
         }
     }
 
+    function dataUpdate() {
+        var data = manager.readAll()
+        append(data)
+    }
+
     Connections {
         target: manager
         function onLineAvailable(){ lineUpdate() }
-
+        function onDataAvailable(){ dataUpdate() }
     }
 
 
@@ -88,6 +108,17 @@ AppRectangle {
         serialData.append({"timestamp": dateString ,"serData": outData, "isSend": false})
     }
 
+    FolderDialog{
+        id: saveDialog
+        folder: StandardPaths.writableLocation(StandardPaths.DocumentsLocation)
+        title: "Select save destination :"
+        onAccepted: {
+                        var log = logToText()
+                        console.log(this.currentFolder)
+                        manager.saveToFile(log, this.currentFolder, ctrlTime.checked)
+            }
+    }
+
     Item {
         id: dataViewController
         height: 40
@@ -112,12 +143,12 @@ AppRectangle {
             AppButton{
                 id:ctrlSave
                 text: "Save Log"
-                onClicked: serialData.clear()
+                onClicked: saveDialog.open()
                 height: parent.height
             }
             AppCheckBox{
                 id: ctrlTime
-                text: "show Time"
+                text: "Show Time"
                 checkable: true
                 checked: true
                 height: parent.height

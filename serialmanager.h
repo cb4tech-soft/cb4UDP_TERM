@@ -5,8 +5,9 @@
 #include <QSerialPort>
 #include <QQmlEngine>
 #include <QMetaType>
+#include <QTimer>
 
-
+#define BUFFERSIZE 128
 
 class SerialInfo : public QObject
 {
@@ -55,6 +56,7 @@ public:
     Q_INVOKABLE QString readLine();
     Q_INVOKABLE void sendData(QList<int> dataOut);
     Q_INVOKABLE void sendString(QString dataOut);
+    Q_INVOKABLE void saveToFile(QStringList dataList, QString filepath, bool timestampsEnabled);
 
 
     static SerialInfo *getStaticInfoInstance();
@@ -99,6 +101,7 @@ private slots:
 private:
     QSerialPort *port = nullptr;
     SerialInfo *info;
+    QTimer *timer;
 
     int m_baudrate = 19200;
     int m_dataBits = 8;
