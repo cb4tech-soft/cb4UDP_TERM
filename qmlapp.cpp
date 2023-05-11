@@ -2,6 +2,7 @@
 #include <QDebug>
 
 #include <QtQml/QQmlContext>
+#include <QQuickStyle>
 
 #include "qmlapp.h"
 
@@ -10,6 +11,7 @@
 
 QmlApp::QmlApp(QWindow *parent) : QQuickView(parent)
 {
+    QQuickStyle::setStyle("Material");
     setResizeMode(QQuickView::SizeRootObjectToView);
     SerialManager::registerQml();
     m_page = new ViewPage(this, "qrc:/qml/main.qml", "uiLink");

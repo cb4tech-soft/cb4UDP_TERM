@@ -133,10 +133,6 @@ void SerialManager::errorHandler(QSerialPort::SerialPortError error)
         setIsConnected(0);
         qDebug() << " => Device Timeout";
     break;
-    case QSerialPort::SerialPortError::ParityError:
-        setIsConnected(0);
-        qDebug() << " => Parity Error";
-    break;
     default:
         setIsConnected(0);
         qDebug() << " => State : ";

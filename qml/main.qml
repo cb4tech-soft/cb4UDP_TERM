@@ -12,7 +12,8 @@ import "SerialManagerTools" as SerialTool
 AppRectangle {
     id:root
     width:850
-    height:400
+    height:800
+    
     property int nbClick: 0
     property bool themeDark: true
     property alias serManager: serManager
@@ -40,6 +41,7 @@ AppRectangle {
             id: mainSplit
             height: parent.height
             SplitView.preferredWidth: 550
+            /*
             AppLabel {
                 id: labelConnect
                 height: 40
@@ -53,34 +55,29 @@ AppRectangle {
                 anchors.leftMargin: 2
                 anchors.rightMargin: 0
             }
+*/
+            SplitView{
+                id:splitViewSerial
+                anchors.fill: parent
+                orientation: Qt.Vertical
 
-            SerialTool.SerialManagerDataViewer{
-                id:dataViewer
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.top: labelConnect.bottom
-                anchors.bottom: serialManagerLineSender.top
-                anchors.bottomMargin: 5
-                anchors.topMargin: 5
-                anchors.leftMargin: 5
-                anchors.rightMargin: 5
-                manager : serManager
+                    SerialTool.SerialManagerDataViewer{
+                        id:dataViewer
+                        SplitView.preferredHeight: parent.height - 80
 
-            }
+                        manager : serManager
 
-            SerialTool.SerialManagerLineSender {
-                id: serialManagerLineSender
-                y: 0
-                height: 80
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
-                anchors.bottomMargin: 5
-                anchors.rightMargin: 5
-                anchors.leftMargin: 5
-                manager : serManager
-                onSendStringData: dataViewer.sendString(stringData)
-                onSendHexaData: dataViewer.send(hexaData)
+                    }
+
+                    SerialTool.SerialManagerLineSender {
+                        id: serialManagerLineSender
+                        y: 0
+
+                        SplitView.preferredHeight: 80
+                        manager : serManager
+                        onSendStringData: function(stringData){ dataViewer.sendString(stringData)}
+                        onSendHexaData:function(hexaData){ dataViewer.send(hexaData) }
+                    }
             }
         }
 

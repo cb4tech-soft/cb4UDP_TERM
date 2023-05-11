@@ -1,7 +1,6 @@
 import QtQuick 2.0
 import SerialInfo 1.0
 import QtQuick.Controls 2.0
-import QtQuick.Extras 1.4
 import QtQuick.Layouts 1.11
 
 import "../Style"
@@ -209,7 +208,7 @@ AppRectangle {
 
     AppButton{
         id:connectButton
-        text: "Connection"
+        text:(!serialConfig.manager.isConnected) ? "Open" : "Close"
         anchors.top: stopBitsList.bottom
         anchors.horizontalCenterOffset: 0
         anchors.topMargin: 40
@@ -223,12 +222,10 @@ AppRectangle {
                 serialConfig.manager.parity = serialConfig.parity
                 serialConfig.manager.stopBits = serialConfig.stopBits
                 serialConfig.manager.connectToPort(serialConfig.port)
-                this.text = "Disconnection"
             }
             else
             {
                 serialConfig.manager.disconnectFromPort();
-                this.text = "Connection"
             }
         }
     }
