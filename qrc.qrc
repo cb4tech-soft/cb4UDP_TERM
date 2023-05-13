@@ -27,5 +27,6 @@
         <file>qml/SerialManagerTools/DataLine.qml</file>
         <file>qml/SerialManagerTools/SerialManagerLineSender.qml</file>
         <file>qml/Style/AppRepeatButton.qml</file>
+        <file>qml/SerialManagerTools/ComPluggedPopup.qml</file>
     </qresource>
 </RCC>

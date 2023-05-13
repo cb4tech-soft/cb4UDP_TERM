@@ -4,10 +4,10 @@
 
 #include <QObject>
 #include <QtQuick/QQuickView>
-
+  #include <QQmlApplicationEngine>
 #include "viewpage/viewpage.h"
 
-class QmlApp : public QQuickView
+class QmlApp : public QQmlApplicationEngine
 {
     Q_OBJECT
 

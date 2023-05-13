@@ -3,23 +3,25 @@
 
 #include <QtQml/QQmlContext>
 #include <QQuickStyle>
+#include <QQmlApplicationEngine>
 
 #include "qmlapp.h"
 
 #include "viewpage/viewpage.h"
 #include "serialmanager.h"
 
-QmlApp::QmlApp(QWindow *parent) : QQuickView(parent)
+QmlApp::QmlApp(QWindow *parent) : QQmlApplicationEngine(parent)
 {
     QQuickStyle::setStyle("Material");
-    setResizeMode(QQuickView::SizeRootObjectToView);
+    //setResizeMode(QQuickView::SizeRootObjectToView);
     SerialManager::registerQml();
-    m_page = new ViewPage(this, "qrc:/qml/main.qml", "uiLink");
-    m_page->enableUiLink();
-    setWidth(900);
-    setHeight(600);
-    viewChanger(m_page);
-    show();
+    //m_page = new ViewPage(this, "qrc:/qml/main.qml", "uiLink");
+    //m_page->enableUiLink();
+    //setWidth(900);
+    //setHeight(600);
+//    viewChanger(m_page);
+    load(QUrl("qrc:/qml/main.qml"));
+    //show();
 }
 
 
@@ -40,7 +42,7 @@ bool QmlApp::event(QEvent *event)
     {
         // return true to cancel close event
     }
-    return QQuickView::event(event);
+    return QQmlApplicationEngine::event(event);
 }
 
 QmlApp::~QmlApp()

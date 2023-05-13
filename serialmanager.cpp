@@ -32,9 +32,7 @@ QStringList SerialManager::getComList()
     QStringList result;
     foreach (const QSerialPortInfo &info, portList)
     {
-
         result.append(info.portName());
-
     }
     return result;
 }

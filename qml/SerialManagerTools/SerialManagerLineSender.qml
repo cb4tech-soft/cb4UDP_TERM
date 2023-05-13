@@ -10,6 +10,7 @@ AppRectangle {
     property SerialManager manager
     width: 600
     height: 80
+    property var hexSeparator: [',', ' ', '-', ';', '\n']
     signal sendStringData(var stringData);
     signal sendHexaData(var hexaData);
 
@@ -21,6 +22,35 @@ AppRectangle {
             str = str.split(tempChar);
             return str;
     }
+    function hexToBytes(hexStr) {
+        let separator = null;
+        for (let i = 0; i < hexStr.length; i++) {
+            if (root.hexSeparator.includes(hexStr[i])) {
+                separator = hexStr[i];
+                break;
+            }
+        }
+        // Split the string by the found separator
+        const parts = hexStr.split(separator);
+
+        // Filter out empty strings and convert to byte array
+        const bytes = parts
+                .filter(part => part.trim() !== '')
+                .map(part => {
+                    // Remove remaining separators from part
+                    for (let sep of root.hexSeparator) {
+                        part = part.replace(new RegExp(sep, 'g'), '');
+                    } // Check if part is a valid hexadecimal string
+                    if (/^[0-9A-Fa-f]+$/.test(part)) {
+                    return parseInt(part, 16);
+                    } else {
+                    return NaN;
+                    }
+                });
+        const filteredArray = bytes.filter((value) => !isNaN(value));
+
+        return filteredArray;
+    }
 
     function triggerSend() {
         if (!textLine.text.length)
@@ -28,22 +58,22 @@ AppRectangle {
         var stringToSend = textLine.text
         switch(comboCRLF.currentIndex) {
             case 0:
-                //stringToSend.replace('\n', '')
-                //stringToSend.replace('\r', '')
                 break
             case 1:
-                //stringToSend.replace('\r', '')
                 stringToSend+= "\n"
                 break
             case 2:
-                //stringToSend.replace('\n', '')
                 stringToSend+= "\r"
                 break
             case 3:
                 stringToSend+= "\r\n"
                 break
+            case 4:
+                stringToSend+= "\0"
+                break
         }
         if(switchHex.checked) {
+            /*
             var bytes = splitMulti(stringToSend, [' ', ',', '-', ';', '\n'])
             //var bytes = stringToSend.split(',')
             var ok = true;
@@ -62,10 +92,13 @@ AppRectangle {
                 }
                 count++
             }
-            //console.log(stringToSend)
+            */
+            var error = false
+            var bytes = hexToBytes(stringToSend)
+            console.log(bytes)
             if(!error) {
                 //textLine.backgroundColor = AppStyle.backgroundLight
-                stringToSend = hexaBytes
+                stringToSend = bytes
                 sendHexaData(stringToSend)
             }
        } else {
@@ -190,7 +223,7 @@ AppRectangle {
 
         AppComboBox {
             id: comboCRLF
-            model: ["No CRLF", "Line feed", "Carriage return", "Both"]
+            model: ["No CRLF", "\\n", "\\r", "\\r\\n", "\\0"]
             height: 37
             Layout.fillHeight: true
             anchors.rightMargin: 5
