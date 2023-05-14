@@ -17,6 +17,7 @@ ApplicationWindow {
     property int nbClick: 0
     property bool themeDark: true
     property bool scanPortEnable : true
+    property bool clearOnSend : false
     property alias serManager: serManager
 
     menuBar: MenuBar {
@@ -24,20 +25,26 @@ ApplicationWindow {
                title: "Advanced"
                Action { text: "Scan port"; checkable: true; checked:root.scanPortEnable
                    onCheckedChanged: function (checked) {
-                       scanPortEnable = checked
+                       root.scanPortEnable = checked
                        checked = Qt.binding(function() { return root.scanPortEnable })
                    }
 
                }
-               Action { text: qsTr("&Open...") }
-               Action { text: qsTr("&Save") }
-               Action { text: qsTr("Save &As...") }
+               Action { text: "ClearOnSend"; checkable: true; checked:root.clearOnSend
+                   onCheckedChanged: function (checked) {
+                       root.clearOnSend = checked
+                       checked = Qt.binding(function() { return root.clearOnSend })
+                   }
+               }
                MenuSeparator { }
-               Action { text: qsTr("&Quit") }
+               Action { text: qsTr("&Quit")
+                        onTriggered: Qt.quit()
+               }
            }
            Menu {
-               title: qsTr("&Help")
-               Action { text: qsTr("&About") }
+               title: "Help"
+               Action { text: "Donation"
+               }
            }
        }
     visible: true
@@ -112,8 +119,14 @@ ApplicationWindow {
 
                         SplitView.preferredHeight: 80
                         manager : serManager
-                        onSendStringData: function(stringData){ dataViewer.sendString(stringData)}
-                        onSendHexaData: function(hexaData){ dataViewer.send(hexaData) }
+                        onSendStringData: function(stringData){
+                            dataViewer.sendString(stringData);
+                            if (root.clearOnSend)
+                                serialManagerLineSender.textInput = ""
+                        }
+                        onSendHexaData: function(hexaData){ dataViewer.send(hexaData)
+                            if (root.clearOnSend)
+                                serialManagerLineSender.textInput = "" }
                     }
             }
         }

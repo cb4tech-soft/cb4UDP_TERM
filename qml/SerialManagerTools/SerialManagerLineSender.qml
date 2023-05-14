@@ -13,15 +13,7 @@ AppRectangle {
     property var hexSeparator: [',', ' ', '-', ';', '\n']
     signal sendStringData(var stringData);
     signal sendHexaData(var hexaData);
-
-    function splitMulti(str, tokens){
-            var tempChar = tokens[0];
-            for(var i = 1; i < tokens.length; i++){
-                str = str.split(tokens[i]).join(tempChar);
-            }
-            str = str.split(tempChar);
-            return str;
-    }
+    property alias textInput: textLine.text
     function hexToBytes(hexStr) {
         let separator = null;
         for (let i = 0; i < hexStr.length; i++) {
@@ -56,53 +48,51 @@ AppRectangle {
         if (!textLine.text.length)
             return
         var stringToSend = textLine.text
-        switch(comboCRLF.currentIndex) {
-            case 0:
-                break
-            case 1:
-                stringToSend+= "\n"
-                break
-            case 2:
-                stringToSend+= "\r"
-                break
-            case 3:
-                stringToSend+= "\r\n"
-                break
-            case 4:
-                stringToSend+= "\0"
-                break
-        }
+
         if(switchHex.checked) {
-            /*
-            var bytes = splitMulti(stringToSend, [' ', ',', '-', ';', '\n'])
-            //var bytes = stringToSend.split(',')
-            var ok = true;
-            var count = 0
-            var hexaBytes = []
-            var error = false
-            while(ok && count < bytes.length) {
-                hexaBytes.push(parseInt(bytes[count], 16))
-                //console.log(hexaBytes[count] + " - " + bytes[count])
-                if(hexaBytes[count] > 0xFF) {
-                    ok = false
-                    hexaBytes = []
-                    //textLine.background.color = "pink"
-                    console.log("Hexa conversion error.")
-                    error = true
-                }
-                count++
-            }
-            */
             var error = false
             var bytes = hexToBytes(stringToSend)
             console.log(bytes)
             if(!error) {
                 //textLine.backgroundColor = AppStyle.backgroundLight
                 stringToSend = bytes
+                switch(comboCRLF.currentIndex) {
+                    case 0:
+                        break
+                    case 1:
+                        stringToSend.push(10)
+                        break
+                    case 2:
+                        stringToSend.push(13)
+                        break
+                    case 3:
+                        stringToSend.push(13)
+                        stringToSend.push(10)
+                        break
+                    case 4:
+                        stringToSend.push(0)
+                    break
+                }
                 sendHexaData(stringToSend)
             }
        } else {
             //textLine.backgroundColor = AppStyle.backgroundLight
+            switch(comboCRLF.currentIndex) {
+                case 0:
+                    break
+                case 1:
+                    stringToSend+= "\n"
+                    break
+                case 2:
+                    stringToSend+= "\r"
+                    break
+                case 3:
+                    stringToSend+= "\r\n"
+                    break
+                case 4:
+                    stringToSend+= "\0"
+                    break
+            }
             sendStringData(stringToSend)
         }
     }
@@ -145,25 +135,21 @@ AppRectangle {
             }
 
             text: (sendLayout.advancedMode) ?
-                      (!timerRepeat.running) ? "Send " + repeatTime.value + " ms" : "stop"
+                     (!timerRepeat.running) ? "Send " + repeatTime.value + " ms" : "stop"
                                             : "Send"
             Layout.bottomMargin: 3
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             Layout.preferredHeight: (root.height > 60) ? 40 : root.height - 20
             onClicked: {
-                if (sendLayout.advancedMode)
-                {
-                    if (timerRepeat.running)
-                    {
+                if (sendLayout.advancedMode) {
+                    if (timerRepeat.running) {
                         timerRepeat.stop()
                     }
-                    else
-                    {
+                    else {
                         timerRepeat.start()
                     }
                 }
-                else
-                {
+                else {
                     triggerSend()
                 }
             }
