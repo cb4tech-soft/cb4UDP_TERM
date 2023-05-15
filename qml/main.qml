@@ -44,13 +44,19 @@ ApplicationWindow {
            Menu {
                title: "Help"
                Action { text: "Donation"
+                   onTriggered: {donation.visible = true; donation.catIndex = Math.ceil(Math.random() * 19)}
                }
            }
        }
     visible: true
     width:850
     height:800
-
+    Donate{
+        id:donation
+        anchors.fill:parent
+        z:10
+        visible: false
+    }
 
     SerialTool.ComPluggedPopup {
         id: popup
