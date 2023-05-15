@@ -25,7 +25,8 @@
         <file>qml/main.qml</file>
         <file>qml/SerialManagerTools/SerialManagerDataViewer.qml</file>
         <file>qml/SerialManagerTools/DataLine.qml</file>
-        <file>qml/SerialManagerTools/SerialDataElement.qml</file>
         <file>qml/SerialManagerTools/SerialManagerLineSender.qml</file>
+        <file>qml/Style/AppRepeatButton.qml</file>
+        <file>qml/SerialManagerTools/ComPluggedPopup.qml</file>
     </qresource>
 </RCC>

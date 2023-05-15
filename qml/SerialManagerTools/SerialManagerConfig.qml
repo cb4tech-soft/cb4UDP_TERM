@@ -1,11 +1,11 @@
 import QtQuick 2.0
 import SerialInfo 1.0
 import QtQuick.Controls 2.0
-import QtQuick.Extras 1.4
 import QtQuick.Layouts 1.11
 
 import "../Style"
 import SerialManager 1.0
+import Qt.labs.settings
 
 
 AppRectangle {
@@ -21,6 +21,14 @@ AppRectangle {
     property int flowControl: flowControlList.currentIndex
     property int parity: parityList.currentIndex
     property int stopBits: stopBitsList.currentIndex
+    Settings {
+        //property alias comListIndex: comList.port.currentIndex
+        property alias baudrateIndex: baudRateList.currentIndex
+        property alias dataBitsIndex: dataBitsList.currentIndex
+        property alias flowControlIndex: flowControlList.currentIndex
+        property alias parityIndex: parityList.currentIndex
+        property alias stopBitsIndex: stopBitsList.currentIndex
+    }
 
     onBaudrateChanged: {
         if (serialConfig.manager.isConnected)
@@ -49,6 +57,7 @@ AppRectangle {
 
     property string port: comList.port.currentText
     property SerialManager manager
+    property alias comList : comList
 
     AppLabel {
         id: label
@@ -72,6 +81,9 @@ AppRectangle {
         anchors.leftMargin: 10
         anchors.topMargin: 5
         height: 40
+        scanPort:true
+
+
     }
     AppLabel {
         id: label2
@@ -209,7 +221,7 @@ AppRectangle {
 
     AppButton{
         id:connectButton
-        text: "Connection"
+        text:(!serialConfig.manager.isConnected) ? "Open" : "Close"
         anchors.top: stopBitsList.bottom
         anchors.horizontalCenterOffset: 0
         anchors.topMargin: 40
@@ -223,12 +235,10 @@ AppRectangle {
                 serialConfig.manager.parity = serialConfig.parity
                 serialConfig.manager.stopBits = serialConfig.stopBits
                 serialConfig.manager.connectToPort(serialConfig.port)
-                this.text = "Disconnection"
             }
             else
             {
                 serialConfig.manager.disconnectFromPort();
-                this.text = "Connection"
             }
         }
     }

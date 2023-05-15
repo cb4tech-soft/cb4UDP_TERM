@@ -1,8 +1,8 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.12
-import Qt.labs.platform 1.1
+import QtQuick
+import QtQuick.Controls.Material
+import Qt.labs.platform
 import  "../Style"
-import SerialManager 1.0
+import SerialManager
 
 AppRectangle {
     id: appRectangle
@@ -122,6 +122,7 @@ AppRectangle {
     Item {
         id: dataViewController
         height: 40
+
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
@@ -131,7 +132,8 @@ AppRectangle {
         Row{
             anchors.fill: parent
             z: 1
-            anchors.topMargin: 5
+            anchors.topMargin: 1
+            anchors.bottomMargin: 1
             layoutDirection: Qt.RightToLeft
 
             AppButton{
@@ -180,8 +182,8 @@ AppRectangle {
 
     ListView {
         id: dataView
-        clip: false
-        height: parent.height - dataViewController.height - 16
+        clip: true
+        height: parent.height - dataViewController.height
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: parent.top
@@ -189,8 +191,10 @@ AppRectangle {
 
 
         ScrollBar.vertical: ScrollBar {
+            id:scrollbar
             policy: ScrollBar.AlwaysOn
             active: ScrollBar.AlwaysOn
+
         }
         delegate: DataLine{
             id:contentLine
@@ -199,11 +203,13 @@ AppRectangle {
             isSendedData: isSend
             hexEnable: ctrlHex.checked
             dateString: timestamp
+            width:(parent)? parent.width - scrollbar.width: 0
 
         }
         onCountChanged: {
             if (ctrlScroll.checked)
-                dataView.positionViewAtEnd()
+                scrollbar.position = 1
+//                dataView.positionViewAtEnd()
         }
 
     }

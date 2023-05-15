@@ -12,9 +12,37 @@ Item {
         property var portList: []
     }
     property alias port: port
+    property bool scanPort: false
+    onScanPortChanged: {
+        console.log("scan changed " + scanPort)
+    }
+
+    signal newComPort(var portName)
+    function compareArrays(arr1, arr2) {
+        return arr2.filter(item => !arr1.includes(item));
+    }
     function updateList()
     {
         internal.portList = SerialInfo.getPortList()
+    }
+    Timer{
+        id: timer
+        repeat: true
+        running: scanPort
+        interval: 1000
+        onTriggered: {
+            console.log("update")
+            var oldPortList = internal.portList
+            updateList()
+            var newList = compareArrays(oldPortList, internal.portList)
+            if (newList.length)
+            {
+                console.log(newList)
+                newComPort(newList)
+            }
+
+        }
+
     }
 
     Component.onCompleted: {

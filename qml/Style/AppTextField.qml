@@ -9,6 +9,7 @@ TextField{
     horizontalAlignment: Text.AlignHCenter
     verticalAlignment: Text.AlignVCenter
     property alias controlText: control.text
+    property alias backgroundColor: rectangle.color
     property bool largeSeparator: false
     selectByMouse: true
     cursorVisible: false

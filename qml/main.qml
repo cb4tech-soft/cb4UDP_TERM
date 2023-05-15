@@ -1,22 +1,65 @@
-import QtQuick 2.0
-import QtQuick.Controls 2.15
+import QtQuick
+import QtQuick.Controls
 import "./Style/"
 
 
-import QtQuick.Layouts 1.11
-import SerialManager 1.0
+import QtQuick.Layouts
+import SerialManager
+import QtQuick.Window
+
 
 import "SerialManagerTools" as SerialTool
 
 
-AppRectangle {
+ApplicationWindow {
     id:root
-    width:850
-    height:400
+
     property int nbClick: 0
     property bool themeDark: true
+    property bool scanPortEnable : true
+    property bool clearOnSend : false
     property alias serManager: serManager
 
+    menuBar: MenuBar {
+           Menu {
+               title: "Advanced"
+               Action { text: "Scan port"; checkable: true; checked:root.scanPortEnable
+                   onCheckedChanged: function (checked) {
+                       root.scanPortEnable = checked
+                       checked = Qt.binding(function() { return root.scanPortEnable })
+                   }
+
+               }
+               Action { text: "ClearOnSend"; checkable: true; checked:root.clearOnSend
+                   onCheckedChanged: function (checked) {
+                       root.clearOnSend = checked
+                       checked = Qt.binding(function() { return root.clearOnSend })
+                   }
+               }
+               MenuSeparator { }
+               Action { text: qsTr("&Quit")
+                        onTriggered: Qt.quit()
+               }
+           }
+           Menu {
+               title: "Help"
+               Action { text: "Donation"
+               }
+           }
+       }
+    visible: true
+    width:850
+    height:800
+
+
+    SerialTool.ComPluggedPopup {
+        id: popup
+        anchors.centerIn: Overlay.overlay
+        height: 300
+        width: 200
+    }
+    Component.onCompleted: {
+    }
 
     onThemeDarkChanged: {
         AppStyle.darkEnable = themeDark
@@ -24,7 +67,6 @@ AppRectangle {
     SerialManager{
         id: serManager
         baudrate: SerialManager.Baud19200
-
     }
     SplitView{
         id:splitView
@@ -34,12 +76,18 @@ AppRectangle {
             width:200
             SplitView.preferredWidth: 140
             manager: serManager
+            comList.onNewComPort: function (portname){
+                popup.comList = portname
+                popup.open()
+            }
+            comList.scanPort: (root.scanPortEnable)? !serManager.isConnected : false
         }
 
         AppRectangle {
             id: mainSplit
             height: parent.height
             SplitView.preferredWidth: 550
+            /*
             AppLabel {
                 id: labelConnect
                 height: 40
@@ -53,34 +101,33 @@ AppRectangle {
                 anchors.leftMargin: 2
                 anchors.rightMargin: 0
             }
+*/
+            SplitView{
+                id:splitViewSerial
+                anchors.fill: parent
+                orientation: Qt.Vertical
 
-            SerialTool.SerialManagerDataViewer{
-                id:dataViewer
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.top: labelConnect.bottom
-                anchors.bottom: serialManagerLineSender.top
-                anchors.bottomMargin: 5
-                anchors.topMargin: 5
-                anchors.leftMargin: 5
-                anchors.rightMargin: 5
-                manager : serManager
+                    SerialTool.SerialManagerDataViewer{
+                        id:dataViewer
+                        SplitView.preferredHeight: parent.height - 80
+                        manager : serManager
+                    }
 
-            }
+                    SerialTool.SerialManagerLineSender {
+                        id: serialManagerLineSender
+                        y: 0
 
-            SerialTool.SerialManagerLineSender {
-                id: serialManagerLineSender
-                y: 0
-                height: 80
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
-                anchors.bottomMargin: 5
-                anchors.rightMargin: 5
-                anchors.leftMargin: 5
-                manager : serManager
-                onSendStringData: dataViewer.sendString(stringData)
-                onSendHexaData: dataViewer.send(hexaData)
+                        SplitView.preferredHeight: 80
+                        manager : serManager
+                        onSendStringData: function(stringData){
+                            dataViewer.sendString(stringData);
+                            if (root.clearOnSend)
+                                serialManagerLineSender.textInput = ""
+                        }
+                        onSendHexaData: function(hexaData){ dataViewer.send(hexaData)
+                            if (root.clearOnSend)
+                                serialManagerLineSender.textInput = "" }
+                    }
             }
         }
 
@@ -91,8 +138,4 @@ AppRectangle {
 
 }
 
-/*##^##
-Designer {
-    D{i:0;formeditorZoom:0.9}
-}
-##^##*/
+

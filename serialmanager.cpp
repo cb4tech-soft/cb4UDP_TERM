@@ -4,16 +4,19 @@
 #include <QSerialPort>
 #include <QSerialPortInfo>
 #include <QDebug>
+#include <QFileDialog>
+#include <QStandardPaths>
 
 SerialInfo serialInfo;
-
 
 
 SerialManager::SerialManager(QObject *parent) : QObject(parent)
 {
     setIsConnected(0);
     port = nullptr;
-
+    timer = new QTimer(this);
+    timer->setSingleShot(true);
+    connect(timer, &QTimer::timeout, this, &SerialManager::dataAvailable);
 }
 
 void SerialManager::registerQml()
@@ -29,9 +32,7 @@ QStringList SerialManager::getComList()
     QStringList result;
     foreach (const QSerialPortInfo &info, portList)
     {
-
         result.append(info.portName());
-
     }
     return result;
 }
@@ -46,12 +47,8 @@ void SerialManager::connectToPort(QString portName)
 {
     if (port)
     {
-        if (port->isOpen())
-        {
-            qDebug()<< "disconnect from " << portName;
-            port->close();
-        }
-            delete port;
+        if (port->isOpen()) port->close();
+        delete port;
         port = nullptr;
         setIsConnected(0);
     }
@@ -83,13 +80,6 @@ void SerialManager::disconnectFromPort()
 
 }
 
-
-
-QString SerialManager::readAll()
-{
-    return port->readAll();
-}
-
 bool SerialManager::isLineAvailable()
 {
     if (port && port->canReadLine())
@@ -100,20 +90,23 @@ bool SerialManager::isLineAvailable()
 
 void SerialManager::checkData()
 {
-    qDebug() << "receiveData";
+    qDebug() << "CheckData !";
     if (port->canReadLine())
         emit lineAvailable();
-    emit dataAvailable();
-
+    //emit dataAvailable();
+    else if(port->bytesAvailable()) {
+        if(port->bytesAvailable() > BUFFERSIZE) {
+            emit dataAvailable();
+       } else {
+            timer->start(100);
+        }
+    }
 }
 
 void SerialManager::errorHandler(QSerialPort::SerialPortError error)
 {
     switch (error)
     {
-    case QSerialPort::SerialPortError::NoError:
-        qDebug() << " => No error found";
-        break;
     case QSerialPort::SerialPortError::DeviceNotFoundError:
         setIsConnected(0);
         qDebug() << " => Device Not Found";
@@ -138,34 +131,22 @@ void SerialManager::errorHandler(QSerialPort::SerialPortError error)
         setIsConnected(0);
         qDebug() << " => Device Timeout";
     break;
-    case QSerialPort::SerialPortError::ParityError:
-        setIsConnected(0);
-        qDebug() << " => Parity Error";
-    break;
     default:
         setIsConnected(0);
-        qDebug() << " => unknow Error occured";
+        qDebug() << " => State : ";
+        qDebug() << error;
     break;
-    }
-}
-
-void SerialManager::showPortInfo()
-{
-    if (port)
-    {
-        qDebug()<< "open : " << port->isOpen();
-        qDebug()<< "Portname : " << port->portName();
-        qDebug()<< "Baudrate : " << port->baudRate();
-        qDebug()<< "DataBits : " << port->dataBits();
-        qDebug()<< "FlowControl : " << port->flowControl();
-        qDebug()<< "Parity : " << port->parity();
-        qDebug()<< "StopBits : " << port->stopBits();
     }
 }
 
 QString SerialManager::readLine()
 {
     return port->readLine();
+}
+
+QString SerialManager::readAll()
+{
+    return port->readAll();
 }
 
 void SerialManager::sendData(QList<int> dataOut)
@@ -183,12 +164,57 @@ void SerialManager::sendData(QList<int> dataOut)
 
 void SerialManager::sendString(QString dataOut)
 {
-    qDebug() << "send_String" << dataOut;
-    showPortInfo();
     if (port && port->isOpen())
     {
         port->write(dataOut.toLocal8Bit());
-        qDebug() << "write success" << dataOut;
+    }
+}
+
+void SerialManager::saveToFile(QStringList dataList, QString filepath, bool timestampsEnabled)
+{
+    //qDebug() << dataList;
+    /*QString caption = "Select destination";
+    QString defaultPath = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+    QString filter = tr("All files (*.*)");
+    //QFileDialog(this, caption, defaultPath, filter);
+    QFileDialog *file = new QFileDialog();
+    file->setDirectory(defaultPath);
+    file->setWindowTitle(caption);
+    file->show();*/
+    //QFileDialog::getExistingDirectory();
+    QString stringLog = "";
+    filepath.remove(0, 7);
+    if(timestampsEnabled) {
+        for(int i = 0; i < dataList.size(); i++) {
+            stringLog.append(dataList[i]);
+            if(i % 2 != 0)
+                stringLog.append("\n");
+        }
+    } else {
+        for(int i = 0; i < dataList.size(); i++) {
+            stringLog.append(dataList[i]);
+            stringLog.append("\n");
+        }
+    }
+    QFile *file = new QFile();
+    int count = 0;
+    bool notExist = false;
+    while(!notExist) {
+        QString path = filepath + "/termLog" + QString::number(count) + ".txt";
+        file->setFileName(path);
+        if(file->exists()) {
+            count++;
+        } else {
+            notExist = true;
+        }
+    }
+    if (file->open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QTextStream fileIn(file);
+        fileIn << stringLog;
+        file->close();
+    } else {
+       qDebug("File opening problem.");
+       qDebug() << file->fileName();
     }
 }
 
@@ -228,7 +254,7 @@ void SerialManager::setDataBits(int newDataBits)
     m_dataBits = newDataBits;
     if (port && port->isOpen())
     {
-        qDebug() << "Change data bits for " << port->portName() << " to " << newDataBits;
+        qDebug() << "Change data bits for " << port->portName();
        switch(newDataBits) {
             case 5:
                 port->setDataBits(QSerialPort::Data5);
@@ -344,7 +370,9 @@ void SerialManager::setStopBits(int newStopBits)
     QStringList result;
     foreach (const QSerialPortInfo &info, portList)
     {
+
         result.append(info.portName());
+
     }
     return result;
  }

@@ -96,7 +96,6 @@ signals:
 private slots:
     void checkData();
     void errorHandler(QSerialPort::SerialPortError error);
-    void showPortInfo();
 
 private:
     QSerialPort *port = nullptr;
