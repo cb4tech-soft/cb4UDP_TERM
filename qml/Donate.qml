@@ -7,8 +7,9 @@ Rectangle {
     ColumnLayout{
         anchors.fill: parent
         Label{
-            text: "Feed me\n"
+            text: "if you like this term. You want to support me and feed the beast\n"
             horizontalAlignment: Text.AlignHCenter
+            wrapMode: Text.WordWrap
             font.pointSize: 13
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter

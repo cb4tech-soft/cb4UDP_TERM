@@ -49,5 +49,7 @@
         <file>qml/image/resized/17.jpg</file>
         <file>qml/image/resized/18.jpg</file>
         <file>qml/image/resized/19.jpg</file>
+        <file>qml/icon/ico0.ico</file>
+        <file>qml/icon/logo1.ico</file>
     </qresource>
 </RCC>
