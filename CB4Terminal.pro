@@ -23,6 +23,7 @@ HEADERS += \
         viewpage/viewpage.h
 
 RESOURCES += \
+        image.qrc \
         qrc.qrc
 
 RC_ICONS = qml/icon/logo1.ico

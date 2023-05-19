@@ -7,7 +7,7 @@ Rectangle {
     ColumnLayout{
         anchors.fill: parent
         Label{
-            text: "if you like this term. You want to support me and feed the beast\n"
+            text: "If you like this term and you want to support me\n"
             horizontalAlignment: Text.AlignHCenter
             wrapMode: Text.WordWrap
             font.pointSize: 13
@@ -30,7 +30,7 @@ Rectangle {
         }
         TextArea{
             id:textArea
-            text: "Send paypal tips on <a href = \"https://www.paypal.com/donate/?hosted_button_id=8AV4Q64GQJ8CC\">paypal</a>"
+            text: "Send me a tips on <a href = \"https://www.paypal.com/donate/?hosted_button_id=8AV4Q64GQJ8CC\">paypal</a>"
             horizontalAlignment: Text.AlignHCenter
             wrapMode: Text.WordWrap
             textFormat: Text.RichText

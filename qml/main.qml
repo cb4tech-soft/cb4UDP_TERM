@@ -83,8 +83,15 @@ ApplicationWindow {
             SplitView.preferredWidth: 140
             manager: serManager
             comList.onNewComPort: function (portname){
-                popup.comList = portname
+                var i = 0
+                while (i < portname.length)
+                {
+                    popup.comList.push(portname[i])
+                    i++;
+                }
+                popup.update_text()
                 popup.open()
+                popup.timer.interval = 4000;
             }
             comList.scanPort: (root.scanPortEnable)? !serManager.isConnected : false
         }
