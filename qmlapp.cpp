@@ -10,6 +10,12 @@
 #include "viewpage/viewpage.h"
 #include "serialmanager.h"
 
+#ifdef Q_OS_WIN
+
+
+
+#endif
+
 QmlApp::QmlApp(QWindow *parent) : QQmlApplicationEngine(parent)
 {
     QQuickStyle::setStyle("Material");
