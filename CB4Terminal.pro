@@ -1,5 +1,6 @@
 QT += quick serialport qml core widgets
 QT += quickcontrols2
+
 android: {
 QT += androidextras
   #  QMAKE_LINK += -nostdlib++

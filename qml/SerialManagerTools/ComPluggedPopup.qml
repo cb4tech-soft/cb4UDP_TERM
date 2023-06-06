@@ -17,12 +17,14 @@ Popup {
     property alias timer: timer
     property var comList: []
 
+    property alias text: label.text
     function update_text()
     {
         label.text = "New device found:\n" + popup.comList.join(', ')
     }
 
-    closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent | Popup.CloseOnPressOutside
+
+    closePolicy: Popup.CloseOnPressOutsideParent | Popup.CloseOnPressOutside
     onOpened: {
         //var str
 
@@ -33,6 +35,13 @@ Popup {
 
     }
 
+    Shortcut {
+        sequence: "Esc"
+        onActivated: {
+            console.log("Esc: cancel a few things")
+            popup.close()
+        }
+    }
     AppLabel{
         id: label
         anchors.fill: parent

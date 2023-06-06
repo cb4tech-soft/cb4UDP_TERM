@@ -9,15 +9,32 @@
 
 #include "viewpage/viewpage.h"
 #include "serialmanager.h"
-
+#include <QSystemTrayIcon>
+#include <QMenu>
 #ifdef Q_OS_WIN
 
 
 
 #endif
+void QmlApp::initSysTrayIcon()
+{
+
+}
+
+void QmlApp::timeout()
+{
+}
 
 QmlApp::QmlApp(QWindow *parent) : QQmlApplicationEngine(parent)
 {
+    //initSysTrayIcon(sysTrayIcon);
+    timer = new QTimer();
+    timer->setInterval(5000);
+    timer->start();
+
+    connect(timer, SIGNAL(timeout()), this, SLOT(timeout()));
+    initSysTrayIcon();
+    //sysTrayIcon->showMessage("Helllo world", "Helllo world dak",  QSystemTrayIcon::Information, 10000);
     QQuickStyle::setStyle("Material");
     //setResizeMode(QQuickView::SizeRootObjectToView);
     SerialManager::registerQml();

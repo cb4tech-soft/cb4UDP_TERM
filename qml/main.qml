@@ -6,6 +6,7 @@ import "./Style/"
 import QtQuick.Layouts
 import SerialManager
 import QtQuick.Window
+import Qt.labs.platform as Platform
 
 
 import "SerialManagerTools" as SerialTool
@@ -48,6 +49,24 @@ ApplicationWindow {
                }
            }
        }
+
+
+    Platform.SystemTrayIcon {
+        id:sysTray
+        visible: true
+        icon.source: "qrc:/qml/icon/logo1.ico"
+
+        menu: Platform.Menu {
+            Platform.MenuItem {
+                text: qsTr("Quit")
+                onTriggered: Qt.quit()
+            }
+        }
+        onMessageClicked: console.log("Message clicked")
+
+//        Component.onCompleted: showMessage("Message title", "Something important came up. Click this to know more.")
+
+    }
     visible: true
     width:850
     height:800
@@ -92,6 +111,8 @@ ApplicationWindow {
                 popup.update_text()
                 popup.open()
                 popup.timer.interval = 4000;
+
+                sysTray.showMessage("New device found",  popup.comList.join(', '))
             }
             comList.scanPort: (root.scanPortEnable)? !serManager.isConnected : false
         }
