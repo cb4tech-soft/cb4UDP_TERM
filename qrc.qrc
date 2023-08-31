@@ -31,5 +31,8 @@
         <file>qml/Donate.qml</file>
         <file>qml/icon/ico0.ico</file>
         <file>qml/icon/logo1.ico</file>
+        <file>qml/Heatmap.qml</file>
+        <file>qml/AppSerial.qml</file>
+        <file>qml/Heatmap3D.qml</file>
     </qresource>
 </RCC>

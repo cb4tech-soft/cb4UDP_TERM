@@ -141,12 +141,12 @@ void SerialManager::errorHandler(QSerialPort::SerialPortError error)
 
 QString SerialManager::readLine()
 {
-    return port->readLine();
+    return QString::fromLocal8Bit(port->readLine());
 }
 
 QString SerialManager::readAll()
 {
-    return port->readAll();
+    return QString::fromLocal8Bit(port->readAll());
 }
 
 void SerialManager::sendData(QList<int> dataOut)

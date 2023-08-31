@@ -112,7 +112,7 @@ void ViewPage::setObjectProperty(const char * objName, QList<QPair<const char *,
     }
 }
 
-void ViewPage::stringDBG(QString str)
+void ViewPage::stringDBG(const QString &str)
 {
     qDebug()<<str;
 }

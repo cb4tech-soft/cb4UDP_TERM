@@ -38,7 +38,7 @@ public:
     void setObjectProperty(const char *objName, QList<QPair<const char *, const QVariant &> > properties);
 
 public slots:
-    void stringDBG(QString str);
+    void stringDBG(const QString &str);
     void stringDBG(const QVariant &value);
 
 private slots:

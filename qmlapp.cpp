@@ -11,19 +11,14 @@
 #include "serialmanager.h"
 #include <QSystemTrayIcon>
 #include <QMenu>
+#include "qml/myscreeninfo.h"
+#include "qml/heatmapdata.h"
 #ifdef Q_OS_WIN
 
 
 
 #endif
-void QmlApp::initSysTrayIcon()
-{
 
-}
-
-void QmlApp::timeout()
-{
-}
 
 QmlApp::QmlApp(QWindow *parent) : QQmlApplicationEngine(parent)
 {
@@ -32,12 +27,12 @@ QmlApp::QmlApp(QWindow *parent) : QQmlApplicationEngine(parent)
     timer->setInterval(5000);
     timer->start();
 
-    connect(timer, SIGNAL(timeout()), this, SLOT(timeout()));
-    initSysTrayIcon();
     //sysTrayIcon->showMessage("Helllo world", "Helllo world dak",  QSystemTrayIcon::Information, 10000);
     QQuickStyle::setStyle("Material");
     //setResizeMode(QQuickView::SizeRootObjectToView);
     SerialManager::registerQml();
+    MyScreenInfo::registerQml();
+    HeatMapData::registerQml();
     //m_page = new ViewPage(this, "qrc:/qml/main.qml", "uiLink");
     //m_page->enableUiLink();
     //setWidth(900);

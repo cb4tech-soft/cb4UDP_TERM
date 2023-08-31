@@ -1,10 +1,12 @@
 QT += quick serialport qml core widgets
 QT += quickcontrols2
+QT += datavisualization
+
 
 android: {
-QT += androidextras
-  #  QMAKE_LINK += -nostdlib++
-   # QMAKE_LFLAGS += -stdlib=libstdc++
+#   QT += androidextras
+#   QMAKE_LINK += -nostdlib++
+#   QMAKE_LFLAGS += -stdlib=libstdc++
 }
 CONFIG += c++11
 
@@ -14,11 +16,15 @@ CONFIG += c++11
 
 SOURCES += \
         main.cpp \
+        qml/heatmapdata.cpp \
+        qml/myscreeninfo.cpp \
         qmlapp.cpp \
         serialmanager.cpp \
         viewpage/viewpage.cpp
 
 HEADERS += \
+        qml/heatmapdata.h \
+        qml/myscreeninfo.h \
         qmlapp.h \
         serialmanager.h \
         viewpage/viewpage.h
@@ -40,4 +46,9 @@ QML_DESIGNER_IMPORT_PATH =
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
+    ANDROID_PACKAGE_SOURCE_DIR = \
+        $$PWD/android
+}
 

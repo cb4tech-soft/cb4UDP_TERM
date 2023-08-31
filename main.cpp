@@ -3,7 +3,7 @@
 #include "qmlapp.h"
 #include <QDebug>
 #ifdef Q_OS_ANDROID
-#include <QtAndroid>
+//#include <QtAndroid>
 #endif
 #include "serialmanager.h"
 #include <QQmlApplicationEngine>
@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
     qDebug() << "ask permission";
 #ifdef Q_OS_ANDROID
-
+/*
     QtAndroid::PermissionResult rr = QtAndroid::checkPermission("android.permission.WRITE_EXTERNAL_STORAGE");
     if(rr == QtAndroid::PermissionResult::Denied) {
         QtAndroid::requestPermissionsSync( QStringList() << "android.permission.WRITE_EXTERNAL_STORAGE" );
@@ -38,8 +38,9 @@ int main(int argc, char *argv[])
                      return -1;
                 }
             }
-
+*/
 #endif
+    qputenv("QSG_RHI_BACKEND", "opengl");
     qDebug() << "Starting view";
     app.setOrganizationName("CB4Tech");
     app.setOrganizationDomain("cb4tech.com");

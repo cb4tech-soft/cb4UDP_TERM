@@ -4,7 +4,7 @@ import "../Style"
 
 Row {
     id:row
-    property string strData: "demo"
+    property variant  strData: ['d','e','m','o']
 
     property string strRichData: "demo"
     property string dateString: ""
@@ -44,6 +44,8 @@ Row {
         readOnly: true
 
         Component.onCompleted: {
+            console.log(strData)
+            //strRichData = strData.join('')
             strRichData = strData.replace(/\n/g, "<br />")
 //            row.height = textArea.contentHeight +2
 //            textArea.height = textArea.contentHeight +2
@@ -56,7 +58,7 @@ Row {
                 textArea.height = textArea.implicitHeight/2
             }
             */
-            console.log(textArea.contentHeight);
+            console.log("text area dataline complete " + textArea.contentHeight);
         }
     }
 

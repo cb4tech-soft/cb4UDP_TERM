@@ -12,9 +12,11 @@ AppRectangle {
     property alias serialData: serialData
 
     property SerialManager manager
+    signal lineDataAppend(string lineData);
 
     function logToText() {
         var chaine =[]
+        console.log("logToText - ")
         for(let i = 0; i < serialData.count; i++) {
             if(ctrlTime.checked) {
                 //This needs to be improved...
@@ -32,9 +34,12 @@ AppRectangle {
     function lineUpdate()
     {
 
+        console.log("lineUpdate - ")
         while (manager.isLineAvailable())
         {
             var dataLine = manager.readLine()
+            lineDataAppend(dataLine);
+            console.log("lineUpdate - ", dataLine)
             if (dataLine[dataLine.length-1] == '\n')
                 dataLine =  dataLine.slice(0, -1)
             append(dataLine);
@@ -42,8 +47,11 @@ AppRectangle {
     }
 
     function dataUpdate() {
-        var data = manager.readAll()
-        append(data)
+        console.log("data update - ")
+        var dataLine = manager.readAll()
+        console.log("data update - ", dataLine)
+
+        append(dataLine)
     }
 
     Connections {
@@ -62,7 +70,8 @@ AppRectangle {
 
     function appendOut(outData)
     {
-        console.log(outData)
+        console.log("appendOut - ", outData)
+
         var r=""
         var i = 0;
         while (i < outData.length)
@@ -94,6 +103,8 @@ AppRectangle {
 
     function apprendOutString(outData)
     {
+        console.log("appendOutString - ", outData)
+
         var currentDate = new Date
         var dateString = "<font color=\"grey\">" + currentDate.toLocaleTimeString(Qt.locale("fr_FR"),"h:mm:ss") + "</font>";
 
@@ -102,9 +113,11 @@ AppRectangle {
 
     function append(outData)
     {
+        console.log("append - outData - ", outData)
         var currentDate = new Date
         var dateString = "<font color=\"grey\">" + currentDate.toLocaleTimeString(Qt.locale("fr_FR"),"h:mm:ss") + "</font>";
 
+        console.log("append - dateString -", dateString)
         serialData.append({"timestamp": dateString ,"serData": outData, "isSend": false})
     }
 

@@ -24,8 +24,6 @@ public slots:
 private slots:
     void    viewChanger(ViewPage *page);
 
-    void timeout();
-    void initSysTrayIcon();
 private:
     ViewPage *m_page = nullptr;
 
