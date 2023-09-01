@@ -70,7 +70,7 @@ AppRectangle {
 
     function appendOut(outData)
     {
-        console.log("appendOut - ", outData)
+        //console.log("appendOut - ", outData)
 
         var r=""
         var i = 0;
@@ -103,7 +103,7 @@ AppRectangle {
 
     function apprendOutString(outData)
     {
-        console.log("appendOutString - ", outData)
+        //console.log("appendOutString - ", outData)
 
         var currentDate = new Date
         var dateString = "<font color=\"grey\">" + currentDate.toLocaleTimeString(Qt.locale("fr_FR"),"h:mm:ss") + "</font>";
@@ -113,11 +113,11 @@ AppRectangle {
 
     function append(outData)
     {
-        console.log("append - outData - ", outData)
+        //console.log("append - outData - ", outData)
         var currentDate = new Date
         var dateString = "<font color=\"grey\">" + currentDate.toLocaleTimeString(Qt.locale("fr_FR"),"h:mm:ss") + "</font>";
 
-        console.log("append - dateString -", dateString)
+        //console.log("append - dateString -", dateString)
         serialData.append({"timestamp": dateString ,"serData": outData, "isSend": false})
     }
 

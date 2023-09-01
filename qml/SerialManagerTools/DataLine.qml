@@ -44,7 +44,7 @@ Row {
         readOnly: true
 
         Component.onCompleted: {
-            console.log(strData)
+//            console.log(strData)
             //strRichData = strData.join('')
             strRichData = strData.replace(/\n/g, "<br />")
 //            row.height = textArea.contentHeight +2
@@ -58,7 +58,7 @@ Row {
                 textArea.height = textArea.implicitHeight/2
             }
             */
-            console.log("text area dataline complete " + textArea.contentHeight);
+//            console.log("text area dataline complete " + textArea.contentHeight);
         }
     }
 

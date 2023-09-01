@@ -99,6 +99,33 @@ ApplicationWindow {
 
                    }
                }
+               Action { text: "BitRegister"
+                   onTriggered: {
+                       console.log("opening bitReg")
+                        bitRegister.source = "BitRegisterItem.qml"
+                       bitRegister.active = true
+                       bitRegister.item.visible = true
+                       var posX = root.x
+                       var posY = root.y + root.height
+                       var screenRect = MyScreenInfo.getScreenInfo( root.x ,  root.y)
+                       console.log(screenRect.width)
+                       if (posX + bitRegister.item.width >= screenRect.x + screenRect.width - 50)
+                       {
+                           console.log("update windows pos ", posX + bitRegister.item.width)
+                           posX = screenRect.x + screenRect.width - bitRegister.item.width - 50
+                       }
+                       if (posY + bitRegister.item.height >= screenRect.y + screenRect.height - 50)
+                       {
+                           posY = screenRect.y + screenRect.height - bitRegister.item.height-50
+                       }
+
+                       console.log("windows pos = ", posX)
+                       bitRegister.item.x = posX
+                       bitRegister.item.y = posY
+                       //heatmapLoader.item.closing = Qt.binding(function() { console.log("closing !!!") })
+
+                   }
+               }
            }
            Menu {
                title: "Help"
@@ -120,6 +147,19 @@ ApplicationWindow {
         Connections {
             target: heatmapLoader.item
             function onClosing() {heatmapLoader.deactivate()}
+        }
+    }
+    Loader{
+        id: bitRegister
+        active: false
+        function deactivate(){
+            bitRegister.active = false
+            console.log("deactivate")
+            bitRegister.source = ""
+        }
+        Connections {
+            target: bitRegister.item
+            function onClosing() {bitRegister.deactivate()}
         }
     }
     Platform.SystemTrayIcon {

@@ -40,7 +40,7 @@ ApplicationWindow {
 
     function datalineAppend(lineData)
     {
-        console.log("dataLine append")
+        //console.log("dataLine append")
         HeatMapData.populate(lineData)
     }
 

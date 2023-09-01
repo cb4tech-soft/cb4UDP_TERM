@@ -141,12 +141,22 @@ void SerialManager::errorHandler(QSerialPort::SerialPortError error)
 
 QString SerialManager::readLine()
 {
-    return QString::fromLocal8Bit(port->readLine());
+    if (Q_LIKELY(port != nullptr))
+    {
+        return QString::fromLocal8Bit(port->readLine());
+    }
+    else
+        return "port close";
 }
 
 QString SerialManager::readAll()
 {
+    if (Q_LIKELY(port != nullptr))
+    {
     return QString::fromLocal8Bit(port->readAll());
+    }
+    else
+        return "port close";
 }
 
 void SerialManager::sendData(QList<int> dataOut)

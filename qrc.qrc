@@ -34,5 +34,6 @@
         <file>qml/Heatmap.qml</file>
         <file>qml/AppSerial.qml</file>
         <file>qml/Heatmap3D.qml</file>
+        <file>qml/BitRegisterItem.qml</file>
     </qresource>
 </RCC>
