@@ -101,6 +101,7 @@ private:
     QSerialPort *port = nullptr;
     SerialInfo *info;
     QTimer *timer;
+    QString m_portName;
 
     int m_baudrate = 19200;
     int m_dataBits = 8;

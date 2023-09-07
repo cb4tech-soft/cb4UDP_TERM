@@ -54,6 +54,7 @@ void SerialManager::connectToPort(QString portName)
     }
 
     port = new QSerialPort(portName);
+    m_portName = portName;
     qDebug()<< "connect to " << portName;
     connect(port, &QSerialPort::errorOccurred, this, &SerialManager::errorHandler);
     port->setBaudRate(m_baudrate);
@@ -131,10 +132,15 @@ void SerialManager::errorHandler(QSerialPort::SerialPortError error)
         setIsConnected(0);
         qDebug() << " => Device Timeout";
     break;
+    case QSerialPort::SerialPortError::ResourceError:
+        qDebug() << " => ressource error";
+        setIsConnected(0);
+        QTimer::singleShot(2000, [=]{this->connectToPort(m_portName);});
+
+    break;
     default:
         setIsConnected(0);
-        qDebug() << " => State : ";
-        qDebug() << error;
+        qDebug() << " => State : " << error;
     break;
     }
 }
