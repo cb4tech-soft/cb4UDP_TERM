@@ -22,7 +22,6 @@ SerialManager::SerialManager(QObject *parent) : QObject(parent)
 void SerialManager::registerQml()
 {
     qmlRegisterType<SerialManager>("SerialManager", 1, 0, "SerialManager");
-
     qmlRegisterSingletonInstance( "SerialInfo", 1, 0, "SerialInfo", getStaticInfoInstance());
 }
 
@@ -41,7 +40,6 @@ void SerialManager::test()
 {
     emit dataAvailable();
 }
-
 
 void SerialManager::connectToPort(QString portName)
 {
@@ -64,9 +62,7 @@ void SerialManager::connectToPort(QString portName)
 
         setIsConnected(1);
     }
-
     connect(port,SIGNAL(readyRead()), this, SLOT(checkData()));
-
 }
 
 void SerialManager::disconnectFromPort()
