@@ -59,7 +59,6 @@ void SerialManager::connectToPort(QString portName)
     port->open(QIODevice::ReadWrite);
     if (port->isOpen())
     {
-
         setIsConnected(1);
     }
     connect(port,SIGNAL(readyRead()), this, SLOT(checkData()));

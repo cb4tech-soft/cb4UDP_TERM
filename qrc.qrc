@@ -35,5 +35,7 @@
         <file>qml/AppSerial.qml</file>
         <file>qml/Heatmap3D.qml</file>
         <file>qml/BitRegisterItem.qml</file>
+        <file>qml/SerialCustomButton.qml</file>
+        <file>qml/CustomButtonWindow.qml</file>
     </qresource>
 </RCC>

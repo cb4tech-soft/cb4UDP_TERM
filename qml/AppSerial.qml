@@ -21,7 +21,17 @@ ApplicationWindow {
     property bool scanPortEnable : true
     property bool clearOnSend : false
     property alias serManager: serManager
-
+    ListModel {
+        id: nameModel
+        ListElement { buttonText: "HeatMap"; command: "H" }
+        ListElement { buttonText: "OPEN1"; command: "0" }
+        ListElement { buttonText: "OPEN2"; command: "1" }
+        ListElement { buttonText: "DAISY OUT"; command: "D" }
+        ListElement { buttonText: "V1"; command: "V" }
+        ListElement { buttonText: "V2"; command: "W" }
+        ListElement { buttonText: "V3"; command: "X" }
+        ListElement { buttonText: "LED"; command: "L" }
+    }
     menuBar: MenuBar {
            Menu {
                title: "Advanced"
@@ -126,6 +136,33 @@ ApplicationWindow {
 
                    }
                }
+               Action { text: "CustomButton"
+
+                   onTriggered: {
+                        console.log("opening CustomButtonWindow.qml")
+                        customButton.source = "CustomButtonWindow.qml"
+                        customButton.active = true
+                        customButton.item.visible = true
+                        var posX = root.x
+                        var posY = root.y + root.height
+                        var screenRect = MyScreenInfo.getScreenInfo( root.x ,  root.y)
+                        if (posX + customButton.item.width >= screenRect.x + screenRect.width - 50)
+                        {
+                           console.log("update windows pos ", posX + customButton.item.width)
+                           posX = screenRect.x + screenRect.width - customButton.item.width - 50
+                        }
+                        if (posY + customButton.item.height >= screenRect.y + screenRect.height - 50)
+                        {
+                           posY = screenRect.y + screenRect.height - customButton.item.height-50
+                        }
+
+                        console.log("windows pos = ", posX)
+                        customButton.item.x = posX
+                        customButton.item.y = posY
+                        customButton.item.modelString = nameModel
+
+                   }
+               }
            }
            Menu {
                title: "Help"
@@ -159,7 +196,24 @@ ApplicationWindow {
         }
         Connections {
             target: bitRegister.item
-            function onClosing() {bitRegister.deactivate()}
+            function onClosing() { bitRegister.deactivate() }
+        }
+    }
+    Loader{
+        id: customButton
+        active: false
+        function deactivate(){
+            customButton.active = false
+            console.log("deactivate")
+            customButton.source = ""
+        }
+        Connections {
+            target: customButton.item
+            function onClosing() { customButton.deactivate() }
+            function onSendString(serialString) {
+                serialManagerLineSender.sendStringData(serialString)
+            }
+
         }
     }
     Platform.SystemTrayIcon {
