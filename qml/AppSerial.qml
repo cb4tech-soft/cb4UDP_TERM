@@ -163,6 +163,32 @@ ApplicationWindow {
 
                    }
                }
+               Action { text: "CharGenerator"
+
+                   onTriggered: {
+                        console.log("opening CharGenerator.qml")
+                        charGenButton.source = "CharGenerator.qml"
+                        charGenButton.active = true
+                        charGenButton.item.visible = true
+                        var posX = root.x
+                        var posY = root.y + root.height
+                        var screenRect = MyScreenInfo.getScreenInfo( root.x ,  root.y)
+                        if (posX + charGenButton.item.width >= screenRect.x + screenRect.width - 50)
+                        {
+                           console.log("update windows pos ", posX + charGenButton.item.width)
+                           posX = screenRect.x + screenRect.width - charGenButton.item.width - 50
+                        }
+                        if (posY + charGenButton.item.height >= screenRect.y + screenRect.height - 50)
+                        {
+                           posY = screenRect.y + screenRect.height - charGenButton.item.height-50
+                        }
+
+                        console.log("windows pos = ", posX)
+                        charGenButton.item.x = posX
+                        charGenButton.item.y = posY
+
+                   }
+               }
            }
            Menu {
                title: "Help"
@@ -213,6 +239,23 @@ ApplicationWindow {
             function onSendString(serialString) {
                 serialManagerLineSender.sendStringData(serialString)
             }
+
+        }
+    }
+    Loader{
+        id: charGenButton
+        active: false
+        function deactivate(){
+            charGenButton.active = false
+            console.log("deactivate")
+            charGenButton.source = ""
+        }
+        Connections {
+            target: charGenButton.item
+            function onClosing() { charGenButton.deactivate() }
+//            function onSendString(serialString) {
+//                serialManagerLineSender.sendStringData(serialString)
+//            }
 
         }
     }

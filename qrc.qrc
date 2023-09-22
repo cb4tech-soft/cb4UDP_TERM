@@ -37,5 +37,6 @@
         <file>qml/BitRegisterItem.qml</file>
         <file>qml/SerialCustomButton.qml</file>
         <file>qml/CustomButtonWindow.qml</file>
+        <file>qml/CharGenerator.qml</file>
     </qresource>
 </RCC>
