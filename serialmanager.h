@@ -7,7 +7,7 @@
 #include <QMetaType>
 #include <QTimer>
 
-#define BUFFERSIZE 128
+#define BUFFERSIZE 255
 
 class SerialInfo : public QObject
 {

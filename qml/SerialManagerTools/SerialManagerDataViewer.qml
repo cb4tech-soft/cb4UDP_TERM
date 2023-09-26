@@ -33,7 +33,6 @@ AppRectangle {
 
     function lineUpdate()
     {
-
         console.log("lineUpdate - ")
         while (manager.isLineAvailable())
         {
@@ -41,7 +40,11 @@ AppRectangle {
             lineDataAppend(dataLine);
             console.log("lineUpdate - ", dataLine)
             if (dataLine[dataLine.length-1] == '\n')
-                dataLine =  dataLine.slice(0, -1)
+            {
+                console.log("lastChar - ", dataLine[dataLine.length-1])
+                console.log("len - ", dataLine.length)
+                dataLine =  dataLine.slice(0, dataLine.length-1)
+            }
             append(dataLine);
         }
     }

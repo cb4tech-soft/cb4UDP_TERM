@@ -8,14 +8,14 @@ ApplicationWindow {
     height: 600
     property var bitValueArray: []
     function updateText(){
-        var strStruct = "uint32_t " + titre.text + "[] = {"
+        var strStruct = "#define " + titre.text + "{\\"
         var i = 0
         var j = 0
         var ind = 0
-        strStruct = strStruct + "\n" + spinWidth.value + ",\n" + spinHeight.value + ","
+        strStruct = strStruct + "\n" + spinWidth.value + ",\\\n" + spinHeight.value + ","
         while (i < spinHeight.value)
         {
-            strStruct = strStruct + "\n0B"
+            strStruct = strStruct + "\\\n0B"
             while (j < spinWidth.value)
             {
                 strStruct = strStruct + bitValueArray[ind]
@@ -28,7 +28,7 @@ ApplicationWindow {
             if (i < spinHeight.value)
                 strStruct = strStruct + ","
         }
-        strStruct = strStruct + "\n}"
+        strStruct = strStruct + "\\\n}"
         textArea.text = strStruct
     }
 

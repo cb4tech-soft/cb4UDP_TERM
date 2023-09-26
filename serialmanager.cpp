@@ -144,7 +144,14 @@ QString SerialManager::readLine()
 {
     if (Q_LIKELY(port != nullptr))
     {
-        return QString::fromUtf8(port->readLine());
+        QString dataString = QString::fromUtf8(port->readLine());
+        if(port->bytesAvailable())
+        {
+            timer->start(100);
+        }
+        else
+            timer->stop();
+        return dataString;
     }
     else
         return "port close";
@@ -154,7 +161,14 @@ QString SerialManager::readAll()
 {
     if (Q_LIKELY(port != nullptr))
     {
-    return QString::fromUtf8(port->readAll());
+        QString dataString = QString::fromUtf8(port->readAll());
+        if(port->bytesAvailable())
+        {
+            timer->start(100);
+        }
+        else
+            timer->stop();
+        return dataString;
     }
     else
         return "port close";
