@@ -11,7 +11,18 @@ ApplicationWindow {
     width: 700
     height: 100
     /* model : ListElement { buttonText: "Alice"; command: "Crypto" }*/
-    property var modelString : []
+    ListModel {
+       id: nameModel
+       ListElement { buttonText: "HeatMap"; command: "H" }
+       ListElement { buttonText: "OPEN1"; command: "0" }
+       ListElement { buttonText: "OPEN2"; command: "1" }
+       ListElement { buttonText: "DAISY OUT"; command: "D" }
+       ListElement { buttonText: "V1"; command: "V" }
+       ListElement { buttonText: "V2"; command: "W" }
+       ListElement { buttonText: "V3"; command: "X" }
+       ListElement { buttonText: "LED"; command: "L" }
+   }
+    property var modelString : nameModel
     signal sendString(serialString: string)
     GridLayout{
         anchors.fill: parent

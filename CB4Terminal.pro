@@ -16,6 +16,7 @@ CONFIG += c++11
 
 SOURCES += \
         main.cpp \
+        pluginInfo.cpp \
         qml/heatmapdata.cpp \
         qml/myscreeninfo.cpp \
         qmlapp.cpp \
@@ -23,6 +24,7 @@ SOURCES += \
         viewpage/viewpage.cpp
 
 HEADERS += \
+        pluginInfo.h \
         qml/heatmapdata.h \
         qml/myscreeninfo.h \
         qmlapp.h \

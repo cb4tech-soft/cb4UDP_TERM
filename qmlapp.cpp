@@ -9,6 +9,7 @@
 
 #include "viewpage/viewpage.h"
 #include "serialmanager.h"
+#include "pluginInfo.h"
 #include <QSystemTrayIcon>
 #include <QMenu>
 #include "qml/myscreeninfo.h"
@@ -33,6 +34,7 @@ QmlApp::QmlApp(QWindow *parent) : QQmlApplicationEngine(parent)
     SerialManager::registerQml();
     MyScreenInfo::registerQml();
     HeatMapData::registerQml();
+    PluginInfo::registerQml();
     //m_page = new ViewPage(this, "qrc:/qml/main.qml", "uiLink");
     //m_page->enableUiLink();
     //setWidth(900);

@@ -12,26 +12,23 @@ import Qt.labs.platform as Platform
 import "SerialManagerTools" as SerialTool
 import MyScreenInfo
 
+import PluginInfo
 
 
 ApplicationWindow {
     id:root
-    property int nbClick: 0
     property bool themeDark: true
     property bool scanPortEnable : true
     property bool clearOnSend : false
     property alias serManager: serManager
-    ListModel {
-        id: nameModel
-        ListElement { buttonText: "HeatMap"; command: "H" }
-        ListElement { buttonText: "OPEN1"; command: "0" }
-        ListElement { buttonText: "OPEN2"; command: "1" }
-        ListElement { buttonText: "DAISY OUT"; command: "D" }
-        ListElement { buttonText: "V1"; command: "V" }
-        ListElement { buttonText: "V2"; command: "W" }
-        ListElement { buttonText: "V3"; command: "X" }
-        ListElement { buttonText: "LED"; command: "L" }
+
+    Connections {
+        target: PluginInfo
+        onPluginFilesChanged: {
+            console.log(PluginInfo.pluginFiles)
+        }
     }
+
     menuBar: MenuBar {
            Menu {
                title: "Advanced"
@@ -159,7 +156,6 @@ ApplicationWindow {
                         console.log("windows pos = ", posX)
                         customButton.item.x = posX
                         customButton.item.y = posY
-                        customButton.item.modelString = nameModel
 
                    }
                }
