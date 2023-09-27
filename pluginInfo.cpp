@@ -82,30 +82,40 @@ PluginInfo::PluginInfo(QObject *parent) : QObject(parent)
 
 void PluginInfo::testUnitPlugin_fileWatcher()
 {
-    qWarning() << "\ttestUnitPlugin_fileWatcher";
-    qWarning() << "Creation d'un fichier test.qml";
-    QFile file(pluginFolder + "test.qml");
-    QFileInfo fileInfo(file);
-    file.open(QIODevice::WriteOnly);
-    file.write("Hello world");
-    file.close();
-    qWarning() << "Creation d'un fichier test.txt";
-    QFile file2(pluginFolder + "test.txt");
-    file2.open(QIODevice::WriteOnly);
-    file2.write("Hello world");
-    file2.close();
-
     QTimer::singleShot(1000, [=]{
-        qWarning() << "Suppression du fichier test.qml";
+        qDebug("\033[32m"); // switch debug to green color
+        qWarning() << "\ttestUnitPlugin_fileWatcher";
+        qWarning() << "Creation d'un fichier test.qml";
         QFile file(pluginFolder + "test.qml");
-        file.remove();
+        QFileInfo fileInfo(file);
+        file.open(QIODevice::WriteOnly);
+        file.write("Hello world");
+        file.close();
+        qWarning() << "Creation d'un fichier test.txt";
+        QFile file2(pluginFolder + "test.txt");
+        file2.open(QIODevice::WriteOnly);
+        file2.write("Hello world");
+        file2.close();
+        QTimer::singleShot(50, [=]{qDebug("\033[0m");});
 
-    });
+        QTimer::singleShot(1000, [=]{
+            qDebug("\033[32m"); // switch debug to green color
+            qWarning() << "Suppression du fichier test.qml";
+            QFile file(pluginFolder + "test.qml");
+            file.remove();
+            QTimer::singleShot(50, [=]{qDebug("\033[0m");});
 
-    QTimer::singleShot(1500, [=]{
-        qWarning() << "Suppression du fichier test.txt";
-        QFile file(pluginFolder + "test.txt");
-        file.remove();
+        });
+
+        QTimer::singleShot(1500, [=]{
+            qDebug("\033[32m"); // switch debug to green color
+            qWarning() << "Suppression du fichier test.txt";
+
+            QFile file(pluginFolder + "test.txt");
+            file.remove();
+            QTimer::singleShot(50, [=]{qDebug("Fin du test\033[0m");});
+
+        });
     });
 }
 

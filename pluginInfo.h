@@ -5,7 +5,7 @@
 #include <QQmlEngine>
 #include <QFileSystemWatcher>
 
-#define BUILD_PLUGIN_TESTUNIT 1
+#define BUILD_PLUGIN_TESTUNIT 0
 
 class PluginInfo : public QObject
 {
