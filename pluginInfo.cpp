@@ -54,6 +54,7 @@ void SSCP_QT::setName(const QString &newName)
 */
 
 #include "pluginInfo.h"
+#include "cb4tools/debug_info.h"
 
 #include <QQmlApplicationEngine>
 #include <QQmlEngine>
@@ -61,25 +62,108 @@ void SSCP_QT::setName(const QString &newName)
 #include <QFileSystemWatcher>
 #include <QFile>
 #include <QTimer>
+#include <QDirIterator>
+
+extern Q_CORE_EXPORT int qt_ntfs_permission_lookup;
+
 PluginInfo* PluginInfo::m_pThis = nullptr;
 
 PluginInfo::PluginInfo(QObject *parent) : QObject(parent)
 {
+    qt_ntfs_permission_lookup++;
     qDebug()<<"PluginInfo constructor";
     QDir d(pluginFolder);
     if (!d.exists())
     {
-        d.mkpath(pluginFolder);
+        d.mkpath(d.absolutePath());
+        qDebug()<<"plugin folder created" << pluginFolder;
     }
-    watcher.addPath(pluginFolder);
-    connect(&watcher, &QFileSystemWatcher::directoryChanged, this, &PluginInfo::updatePluginList);
 #if (BUILD_PLUGIN_TESTUNIT == 1)
     testUnitPlugin_fileWatcher();
 #endif
+    extractQrcPlugin();
+    updatePluginList();
+    watcher.addPath(pluginFolder);
+    connect(&watcher, &QFileSystemWatcher::directoryChanged, this, &PluginInfo::updatePluginList);
+
 }
 
-#if (BUILD_PLUGIN_TESTUNIT == 1)
+// extract qml plugins from plugins.qrc to plugin folder
+void PluginInfo::extractQrcPlugin()
+{
+    QDir d(pluginFolder);
+    QFile versionFile(pluginFolder + BUILD_VERSION_FILE);
+    bool newVersion = false;
+    if (!d.exists())
+    {
 
+        d.mkpath(d.absolutePath());
+        versionFile.open(QIODevice::WriteOnly);
+        versionFile.write(compilationDateTime.toLatin1());
+        versionFile.close();
+        qDebug()<<"plugin folder created" << pluginFolder;
+    }
+    else
+    {
+        versionFile.open(QIODevice::ReadOnly);
+        QByteArray version = versionFile.readAll();
+        versionFile.close();
+        if (version != compilationDateTime)
+        {
+            qDebug()<<"new version of plugin";
+            newVersion = true;
+            versionFile.open(QIODevice::WriteOnly);
+            versionFile.write(compilationDateTime.toLatin1());
+            versionFile.close();
+        }
+    }
+    QDirIterator it(":/plugin/", QDirIterator::Subdirectories);
+    while (it.hasNext())
+    {
+        QString path = it.next();
+        qDebug()<<"extractQrcPlugin: "<<path;
+        QFileInfo fileInfo(path);
+        if (fileInfo.isFile())
+        {
+            QDBG_GREEN() << "file: " << path << DBG_CLR_RESET;
+            QString saveFolderPath = QString(path).replace(":/plugin/", pluginFolder, Qt::CaseInsensitive);
+
+            QDBG_GREEN() << "new path file: " << saveFolderPath << DBG_CLR_RESET;
+            if (QFile::exists(saveFolderPath))
+            {
+                QFile f(saveFolderPath);
+                QString filePath = QFileInfo(f).absoluteFilePath();
+                if (newVersion)
+                {
+                    f.setPermissions((QFileDevice::Permission)0x777);
+                    qDebug()<<"remove old version of plugin: " <<  fileInfo.fileName();
+                    qDebug()<<" remove result" << f.remove();
+                }
+                else
+                {
+                    continue;
+                }
+            }
+            qDebug() << "copy file" << path << "to" << saveFolderPath << QFile::copy(path, saveFolderPath);
+
+        }
+        else if (fileInfo.isDir())
+        {
+            QDBG_GREEN() << "dir: " << path << DBG_CLR_RESET;
+            QDir dir(pluginFolder + fileInfo.fileName());
+            if (!dir.exists())
+            {
+                dir.mkpath(dir.absolutePath());
+            }
+        }
+    }
+
+
+}
+
+
+
+#if (BUILD_PLUGIN_TESTUNIT == 1)
 void PluginInfo::testUnitPlugin_fileWatcher()
 {
     QTimer::singleShot(1000, [=]{
@@ -118,18 +202,42 @@ void PluginInfo::testUnitPlugin_fileWatcher()
         });
     });
 }
-
 #endif
 
 
 void PluginInfo::updatePluginList()
 {
+    QDBG_FUNCNAME_BLUE("[PLUGINS] >>");
     QDir d(pluginFolder);
-    QStringList files = d.entryList(QStringList()<<"*.qml" ,QDir::Files);
-    setPluginFiles(files);
-    qDebug()<<"plugin files updated: "<<files;
-}
+    QStringList dirs = d.entryList(QDir::Dirs);
+    QStringList fullPathList;
+    for (const QString &dirPath: dirs)
+    {
+        if (dirPath == "." || dirPath == "..")
+            continue;
+        QString filePath = pluginFolder + dirPath + "/" + dirPath + ".qml";
+        QFile plugin(filePath);
+        if (plugin.exists())
+        {
+//            QDBG_BLUE() << filePath << DBG_CLR_RESET;
+            fullPathList.append(d.absoluteFilePath(dirPath + "/" + dirPath + ".qml"));
+        }
+        else{
+            QDBG_RED() << "ERROR " << filePath  << " plugin main file not found " << DBG_CLR_RESET;
+        }
+    }
 
+    // compare 2 lists and print difference
+    for (const QString &file : fullPathList)
+    {
+        if (m_pluginFiles.contains(file))
+            continue;
+        QDBG_BLUE()<<"new plugin file: "<<file << DBG_CLR_RESET;
+    }
+
+    setPluginFiles(fullPathList);
+
+}
 
 void PluginInfo::registerQml()
 {

@@ -34,9 +34,9 @@
         <file>qml/Heatmap.qml</file>
         <file>qml/AppSerial.qml</file>
         <file>qml/Heatmap3D.qml</file>
-        <file>qml/BitRegisterItem.qml</file>
         <file>qml/SerialCustomButton.qml</file>
         <file>qml/CustomButtonWindow.qml</file>
-        <file>qml/CharGenerator.qml</file>
+        <file>js/fileStringTools.js</file>
+        <file>qml/AppSerialMenu.qml</file>
     </qresource>
 </RCC>

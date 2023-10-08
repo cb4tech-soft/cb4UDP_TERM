@@ -14,6 +14,9 @@
 #include <QMenu>
 #include "qml/myscreeninfo.h"
 #include "qml/heatmapdata.h"
+#include "cb4tools/build_info.h"
+#include "cb4tools/debug_info.h"
+
 #ifdef Q_OS_WIN
 
 
@@ -23,25 +26,19 @@
 
 QmlApp::QmlApp(QWindow *parent) : QQmlApplicationEngine(parent)
 {
-    //initSysTrayIcon(sysTrayIcon);
     timer = new QTimer();
     timer->setInterval(5000);
     timer->start();
 
-    //sysTrayIcon->showMessage("Helllo world", "Helllo world dak",  QSystemTrayIcon::Information, 10000);
     QQuickStyle::setStyle("Material");
-    //setResizeMode(QQuickView::SizeRootObjectToView);
+
     SerialManager::registerQml();
     MyScreenInfo::registerQml();
     HeatMapData::registerQml();
     PluginInfo::registerQml();
-    //m_page = new ViewPage(this, "qrc:/qml/main.qml", "uiLink");
-    //m_page->enableUiLink();
-    //setWidth(900);
-    //setHeight(600);
-//    viewChanger(m_page);
+
     load(QUrl("qrc:/qml/main.qml"));
-    //show();
+    QDBG_YELLOW() << compilationDateTime << DBG_CLR_RESET;
 }
 
 

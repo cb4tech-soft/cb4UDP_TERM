@@ -15,31 +15,7 @@ int main(int argc, char *argv[])
     qDebug() << "Starting app";
     QGuiApplication app(argc, argv);
     qDebug() << "ask permission";
-#ifdef Q_OS_ANDROID
-/*
-    QtAndroid::PermissionResult rr = QtAndroid::checkPermission("android.permission.WRITE_EXTERNAL_STORAGE");
-    if(rr == QtAndroid::PermissionResult::Denied) {
-        QtAndroid::requestPermissionsSync( QStringList() << "android.permission.WRITE_EXTERNAL_STORAGE" );
-        rr = QtAndroid::checkPermission("android.permission.WRITE_EXTERNAL_STORAGE");
-        if(rr == QtAndroid::PermissionResult::Denied) {
-            qDebug() << "external permission denied";
 
-             return -1;
-        }
-    }
-
-
-            QtAndroid::PermissionResult r = QtAndroid::checkPermission("com.google.android.things.permission.USE_PERIPHERAL_IO");
-            if(r == QtAndroid::PermissionResult::Denied) {
-                QtAndroid::requestPermissionsSync( QStringList() << "com.google.android.things.permission.USE_PERIPHERAL_IO" );
-                r = QtAndroid::checkPermission("com.google.android.things.permission.USE_PERIPHERAL_IO");
-                if(r == QtAndroid::PermissionResult::Denied) {
-                    qDebug() << "uart permission denied";
-                     return -1;
-                }
-            }
-*/
-#endif
     qputenv("QSG_RHI_BACKEND", "opengl");
     qDebug() << "Starting view";
     app.setOrganizationName("CB4Tech");

@@ -14,7 +14,9 @@ import MyScreenInfo
 
 import PluginInfo
 
+import 'qrc:/js/fileStringTools.js' as FileStringTools
 
+// @disable-check M208
 ApplicationWindow {
     id:root
     property bool themeDark: true
@@ -24,176 +26,52 @@ ApplicationWindow {
 
     Connections {
         target: PluginInfo
-        onPluginFilesChanged: {
+        function onPluginFilesChanged() {
             console.log(PluginInfo.pluginFiles)
         }
     }
 
-    menuBar: MenuBar {
-           Menu {
-               title: "Advanced"
-               Action { text: "Scan port"; checkable: true; checked:root.scanPortEnable
-                   onCheckedChanged: function (checked) {
-                       root.scanPortEnable = checked
-                       checked = Qt.binding(function() { return root.scanPortEnable })
-                   }
+    menuBar: AppSerialMenu{}
 
-               }
-               Action { text: "ClearOnSend"; checkable: true; checked:root.clearOnSend
-                   onCheckedChanged: function (checked) {
-                       root.clearOnSend = checked
-                       checked = Qt.binding(function() { return root.clearOnSend })
-                   }
-               }
-               MenuSeparator { }
-               Action { text: qsTr("&Quit")
-                        onTriggered: Qt.quit()
-               }
-           }
-           Menu {
-               title: "Addon"
-               Action { text: "Heatmap"
-                   onTriggered: {
-                       console.log("opening heatmap")
-                    heatmapLoader.source = "Heatmap.qml"
-                       heatmapLoader.active = true
-                       heatmapLoader.item.visible = true
-                       var posX = root.x + root.width
-                       var posY = root.y
-                       var screenRect = MyScreenInfo.getScreenInfo( root.x ,  root.y)
-                       console.log(screenRect.width)
-                       if (posX + heatmapLoader.item.width >= screenRect.x + screenRect.width - 50)
-                       {
-                           console.log("update windows pos ", posX + heatmapLoader.item.width)
-                           posX = screenRect.x + screenRect.width - heatmapLoader.item.width - 50
-                       }
-                       if (posY + heatmapLoader.item.height >= screenRect.y + screenRect.height - 50)
-                       {
-                           posY = screenRect.y + screenRect.height - heatmapLoader.item.height-50
-                       }
+    Repeater{
+        id: pluginLoader
+        model: PluginInfo.pluginFiles
+        Loader{
+            id: pluginLoaderItem
+            active: false
+            function deactivate(){
+                pluginLoaderItem.active = false
+                console.log("deactivate")
+                pluginLoaderItem.source = ""
+            }
+            Connections {
+                target: pluginLoaderItem.item
+                function onClosing() {
+                    pluginLoaderItem.deactivate()
+                    pluginLoaderItem.source = ""
+                }
+                function onSendString(serialString) {
+                    console.log(serialString)
+                    serialManagerLineSender.sendStringData(serialString)
+                }
+            }
+            Connections {
+                target: dataViewer
+                function onLineDataAppend(lineData) {
+                    if (pluginLoaderItem.active && pluginLoaderItem.item && pluginLoaderItem.item.receiveLineFeatureEnable)
+                    {
+                        pluginLoaderItem.item.receiveString(lineData);
+                    }
+                }
 
-                       console.log("windows pos = ", posX)
-                       heatmapLoader.item.x = posX
-                       heatmapLoader.item.y = posY
-                       //heatmapLoader.item.closing = Qt.binding(function() { console.log("closing !!!") })
 
-                   }
-               }
-               Action { text: "Heatmap3D"
-                   onTriggered: {
-                       console.log("opening heatmap")
-                    heatmapLoader.source = "Heatmap3D.qml"
-                       heatmapLoader.active = true
-                       heatmapLoader.item.visible = true
-                       var posX = root.x + root.width
-                       var posY = root.y
-                       var screenRect = MyScreenInfo.getScreenInfo( root.x ,  root.y)
-                       console.log(screenRect.width)
-                       if (posX + heatmapLoader.item.width >= screenRect.x + screenRect.width - 50)
-                       {
-                           console.log("update windows pos ", posX + heatmapLoader.item.width)
-                           posX = screenRect.x + screenRect.width - heatmapLoader.item.width - 50
-                       }
-                       if (posY + heatmapLoader.item.height >= screenRect.y + screenRect.height - 50)
-                       {
-                           posY = screenRect.y + screenRect.height - heatmapLoader.item.height-50
-                       }
+            }
 
-                       console.log("windows pos = ", posX)
-                       heatmapLoader.item.x = posX
-                       heatmapLoader.item.y = posY
-                       //heatmapLoader.item.closing = Qt.binding(function() { console.log("closing !!!") })
-
-                   }
-               }
-               Action { text: "BitRegister"
-                   onTriggered: {
-                       console.log("opening bitReg")
-                        bitRegister.source = "BitRegisterItem.qml"
-                       bitRegister.active = true
-                       bitRegister.item.visible = true
-                       var posX = root.x
-                       var posY = root.y + root.height
-                       var screenRect = MyScreenInfo.getScreenInfo( root.x ,  root.y)
-                       console.log(screenRect.width)
-                       if (posX + bitRegister.item.width >= screenRect.x + screenRect.width - 50)
-                       {
-                           console.log("update windows pos ", posX + bitRegister.item.width)
-                           posX = screenRect.x + screenRect.width - bitRegister.item.width - 50
-                       }
-                       if (posY + bitRegister.item.height >= screenRect.y + screenRect.height - 50)
-                       {
-                           posY = screenRect.y + screenRect.height - bitRegister.item.height-50
-                       }
-
-                       console.log("windows pos = ", posX)
-                       bitRegister.item.x = posX
-                       bitRegister.item.y = posY
-                       //heatmapLoader.item.closing = Qt.binding(function() { console.log("closing !!!") })
-
-                   }
-               }
-               Action { text: "CustomButton"
-
-                   onTriggered: {
-                        console.log("opening CustomButtonWindow.qml")
-                        customButton.source = "CustomButtonWindow.qml"
-                        customButton.active = true
-                        customButton.item.visible = true
-                        var posX = root.x
-                        var posY = root.y + root.height
-                        var screenRect = MyScreenInfo.getScreenInfo( root.x ,  root.y)
-                        if (posX + customButton.item.width >= screenRect.x + screenRect.width - 50)
-                        {
-                           console.log("update windows pos ", posX + customButton.item.width)
-                           posX = screenRect.x + screenRect.width - customButton.item.width - 50
-                        }
-                        if (posY + customButton.item.height >= screenRect.y + screenRect.height - 50)
-                        {
-                           posY = screenRect.y + screenRect.height - customButton.item.height-50
-                        }
-
-                        console.log("windows pos = ", posX)
-                        customButton.item.x = posX
-                        customButton.item.y = posY
-
-                   }
-               }
-               Action { text: "CharGenerator"
-
-                   onTriggered: {
-                        console.log("opening CharGenerator.qml")
-                        charGenButton.source = "CharGenerator.qml"
-                        charGenButton.active = true
-                        charGenButton.item.visible = true
-                        var posX = root.x
-                        var posY = root.y + root.height
-                        var screenRect = MyScreenInfo.getScreenInfo( root.x ,  root.y)
-                        if (posX + charGenButton.item.width >= screenRect.x + screenRect.width - 50)
-                        {
-                           console.log("update windows pos ", posX + charGenButton.item.width)
-                           posX = screenRect.x + screenRect.width - charGenButton.item.width - 50
-                        }
-                        if (posY + charGenButton.item.height >= screenRect.y + screenRect.height - 50)
-                        {
-                           posY = screenRect.y + screenRect.height - charGenButton.item.height-50
-                        }
-
-                        console.log("windows pos = ", posX)
-                        charGenButton.item.x = posX
-                        charGenButton.item.y = posY
-
-                   }
-               }
-           }
-           Menu {
-               title: "Help"
-               Action { text: "Donation"
-                   onTriggered: {donation.visible = true; donation.catIndex = Math.ceil(Math.random() * 19)}
-               }
-           }
-       }
-
+            Component.onCompleted: {
+                console.log(index, "complete loader")
+            }
+        }
+    }
 
     Loader{
         id: heatmapLoader
@@ -206,19 +84,6 @@ ApplicationWindow {
         Connections {
             target: heatmapLoader.item
             function onClosing() {heatmapLoader.deactivate()}
-        }
-    }
-    Loader{
-        id: bitRegister
-        active: false
-        function deactivate(){
-            bitRegister.active = false
-            console.log("deactivate")
-            bitRegister.source = ""
-        }
-        Connections {
-            target: bitRegister.item
-            function onClosing() { bitRegister.deactivate() }
         }
     }
     Loader{
@@ -238,42 +103,9 @@ ApplicationWindow {
 
         }
     }
-    Loader{
-        id: charGenButton
-        active: false
-        function deactivate(){
-            charGenButton.active = false
-            console.log("deactivate")
-            charGenButton.source = ""
-        }
-        Connections {
-            target: charGenButton.item
-            function onClosing() { charGenButton.deactivate() }
-//            function onSendString(serialString) {
-//                serialManagerLineSender.sendStringData(serialString)
-//            }
-
-        }
-    }
-    Platform.SystemTrayIcon {
-        id:sysTray
-        visible: true
-        icon.source: "qrc:/qml/icon/logo1.ico"
-
-        menu: Platform.Menu {
-            Platform.MenuItem {
-                text: qsTr("Quit")
-                onTriggered: Qt.quit()
-            }
-        }
-        onMessageClicked: console.log("Message clicked")
-
-//        Component.onCompleted: showMessage("Message title", "Something important came up. Click this to know more.")
-
-    }
     visible: true
     width:850
-    height:800
+    height:Math.min(MyScreenInfo.getScreenInfo(x,  y).height - 100, 850);
     Donate{
         id:donation
         anchors.fill:parent
@@ -286,8 +118,6 @@ ApplicationWindow {
         anchors.centerIn: Overlay.overlay
         height: 300
         width: 200
-    }
-    Component.onCompleted: {
     }
 
     onThemeDarkChanged: {
@@ -360,11 +190,22 @@ ApplicationWindow {
                     }
             }
         }
-
-
     }
 
 
+    Platform.SystemTrayIcon {
+        id:sysTray
+        visible: true
+        icon.source: "qrc:/qml/icon/logo1.ico"
+
+        menu: Platform.Menu {
+            Platform.MenuItem {
+                text: qsTr("Quit")
+                onTriggered: Qt.quit()
+            }
+        }
+        onMessageClicked: console.log("Message clicked")
+    }
 
 }
 

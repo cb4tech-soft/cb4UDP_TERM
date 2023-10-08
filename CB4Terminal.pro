@@ -1,7 +1,13 @@
 QT += quick serialport qml core widgets
 QT += quickcontrols2
-QT += datavisualization
 
+windows: {
+    build_nr.commands = $$PWD/script/build_inc.bat > $$PWD/cb4tools/build_info.h
+    build_nr.depends = FORCE
+    QMAKE_EXTRA_TARGETS += build_nr
+    PRE_TARGETDEPS += build_nr
+    HEADERS  += $$PWD/cb4tools/build_info.h
+}
 
 android: {
 #   QT += androidextras
@@ -24,15 +30,21 @@ SOURCES += \
         viewpage/viewpage.cpp
 
 HEADERS += \
+        cb4tools/debug_info.h \
         pluginInfo.h \
         qml/heatmapdata.h \
         qml/myscreeninfo.h \
         qmlapp.h \
+        script/build_inc.bat \
         serialmanager.h \
         viewpage/viewpage.h
 
+DEPENDPATH *= $${INCLUDEPATH}
+
+
 RESOURCES += \
         image.qrc \
+        plugins.qrc \
         qrc.qrc
 
 RC_ICONS = qml/icon/logo1.ico

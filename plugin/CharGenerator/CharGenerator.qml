@@ -7,6 +7,8 @@ ApplicationWindow {
     width: 600
     height: 600
     property var bitValueArray: []
+
+
     function updateText(){
         var strStruct = "#define " + titre.text + "{\\"
         var i = 0
@@ -88,6 +90,8 @@ ApplicationWindow {
             property int nbCase: spinWidth.value * spinHeight.value
             onNbCaseChanged: {
                 bitValueArray = Array(nbCase)
+                console.log(nbCase)
+                sendString(nbCase)
             }
 
             columns: spinWidth.value
@@ -101,6 +105,7 @@ ApplicationWindow {
                         bitValueArray[index] = selected
                         console.log(index, "->", selected)
                         updateText()
+
                     }
                     Component.onCompleted: {
                         bitValueArray[index] = selected

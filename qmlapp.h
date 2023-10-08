@@ -36,6 +36,7 @@ private:
     QMenu *trayIconMenu;
 
     QTimer *timer;
+
 };
 
 #endif // __QMLAPP_H

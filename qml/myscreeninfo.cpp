@@ -94,9 +94,7 @@ QObject *MyScreenInfo::qmlInstance(QQmlEngine *engine, QJSEngine *scriptEngine) 
 
 QRect MyScreenInfo::getScreenInfo(int posX, int posY)
 {
-    qDebug()<< Q_FUNC_INFO << posX << posY;
     QScreen *screen = QGuiApplication::screenAt(QPoint(posX, posY));
-    qDebug()<< Q_FUNC_INFO << screen->geometry();
 
     return screen->geometry();
 }

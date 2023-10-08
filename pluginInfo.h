@@ -5,8 +5,10 @@
 #include <QQmlEngine>
 #include <QFileSystemWatcher>
 
-#define BUILD_PLUGIN_TESTUNIT 0
+#include "cb4tools/build_info.h"
 
+#define BUILD_PLUGIN_TESTUNIT 0
+#define BUILD_VERSION_FILE "version.txt"
 class PluginInfo : public QObject
 {
     Q_OBJECT
@@ -31,12 +33,15 @@ private slots:
 
 private:
     explicit PluginInfo(QObject *parent = nullptr);
+    void extractQrcPlugin();
+
     static PluginInfo* m_pThis;
     QFileSystemWatcher watcher;
 
 #if (BUILD_PLUGIN_TESTUNIT == 1)
     void testUnitPlugin_fileWatcher();
 #endif
+    const QString compdt = QDateTime::fromString(QStringLiteral(__DATE__) + QStringLiteral(" ") + QStringLiteral(__TIME__), "MMM  d yyyy hh:mm:ss").toString("MMddyy_hhmmss");//.arg().arg(__TIME__);
 
     QString pluginFolder = "./plugin/";
     QStringList m_pluginFiles;

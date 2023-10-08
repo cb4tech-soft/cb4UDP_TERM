@@ -31,7 +31,6 @@ Item {
         running: scanPort
         interval: 1000
         onTriggered: {
-            console.log("update")
             var oldPortList = internal.portList
             updateList()
             var newList = compareArrays(oldPortList, internal.portList)
