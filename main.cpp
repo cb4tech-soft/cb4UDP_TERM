@@ -21,7 +21,10 @@ int main(int argc, char *argv[])
     app.setOrganizationName("CB4Tech");
     app.setOrganizationDomain("cb4tech.com");
     app.setApplicationName("CB4Terminal");
+
     QmlApp a;
+#ifdef TESTING
+#endif
 
     return app.exec();
 }
