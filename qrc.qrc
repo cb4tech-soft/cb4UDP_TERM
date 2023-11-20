@@ -38,5 +38,9 @@
         <file>qml/CustomButtonWindow.qml</file>
         <file>js/fileStringTools.js</file>
         <file>qml/AppSerialMenu.qml</file>
+        <file>qml/SerialManagerTools/UdpManagerConfig.qml</file>
+        <file>qml/AppUdp.qml</file>
+        <file>qml/SerialManagerTools/UdpManagerDataViewer.qml</file>
+        <file>qml/SerialManagerTools/UdpManagerLineSender.qml</file>
     </qresource>
 </RCC>

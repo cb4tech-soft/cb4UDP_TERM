@@ -46,7 +46,7 @@ void PluginInfo::extractQrcPlugin()
 
         d.mkpath(d.absolutePath());
         versionFile.open(QIODevice::WriteOnly);
-        versionFile.write(compilationDateTime.toLatin1());
+        versionFile.write(QString(COMPILATION_DATE_TIME).toLatin1());
         versionFile.close();
         qDebug()<<"plugin folder created" << pluginFolder;
     }
@@ -55,12 +55,12 @@ void PluginInfo::extractQrcPlugin()
         versionFile.open(QIODevice::ReadOnly);
         QByteArray version = versionFile.readAll();
         versionFile.close();
-        if (version != compilationDateTime)
+        if (version != QString(COMPILATION_DATE_TIME))
         {
             qDebug()<<"new version of plugin";
             newVersion = true;
             versionFile.open(QIODevice::WriteOnly);
-            versionFile.write(compilationDateTime.toLatin1());
+            versionFile.write(QString(COMPILATION_DATE_TIME).toLatin1());
             versionFile.close();
         }
     }

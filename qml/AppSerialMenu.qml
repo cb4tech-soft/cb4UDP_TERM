@@ -4,7 +4,7 @@ import "./Style/"
 
 
 import QtQuick.Layouts
-import SerialManager
+import UdpManager
 import QtQuick.Window
 import Qt.labs.platform as Platform
 

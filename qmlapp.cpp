@@ -16,7 +16,7 @@
 #include "qml/heatmapdata.h"
 #include "cb4tools/build_info.h"
 #include "cb4tools/debug_info.h"
-
+#include "udpmanager.h"
 #ifdef Q_OS_WIN
 
 
@@ -32,13 +32,13 @@ QmlApp::QmlApp(QWindow *parent) : QQmlApplicationEngine(parent)
 
     QQuickStyle::setStyle("Material");
 
-    SerialManager::registerQml();
+    UdpManager::registerQml();
     MyScreenInfo::registerQml();
     HeatMapData::registerQml();
     PluginInfo::registerQml();
 
     load(QUrl("qrc:/qml/main.qml"));
-    QDBG_YELLOW() << compilationDateTime << DBG_CLR_RESET;
+    QDBG_YELLOW() << COMPILATION_DATE_TIME << DBG_CLR_RESET;
 }
 
 

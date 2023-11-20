@@ -50,7 +50,6 @@ AppRectangle {
     }
 
     function dataUpdate() {
-        console.log("data update - ")
         var dataLine = manager.readAll()
         console.log("data update - ", dataLine)
 
