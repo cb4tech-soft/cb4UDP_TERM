@@ -7,7 +7,6 @@
 
 #include "qmlapp.h"
 
-#include "viewpage/viewpage.h"
 #include "serialmanager.h"
 #include "pluginInfo.h"
 #include <QSystemTrayIcon>
@@ -41,14 +40,6 @@ QmlApp::QmlApp(QWindow *parent) : QQmlApplicationEngine(parent)
     QDBG_YELLOW() << COMPILATION_DATE_TIME << DBG_CLR_RESET;
 }
 
-
-void    QmlApp::viewChanger(ViewPage *page)
-{
-    if (m_page && page != m_page)
-        m_page->deleteLater();
-    m_page = page;
-    page->show();
-}
 
 /*
  * Gestion Close Event

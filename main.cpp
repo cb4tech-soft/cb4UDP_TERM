@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
     qDebug() << "Starting view";
     app.setOrganizationName("CB4Tech");
     app.setOrganizationDomain("cb4tech.com");
-    app.setApplicationName("CB4Terminal");
+    app.setApplicationName("CB4UDP");
 
     QmlApp a;
 #ifdef TESTING

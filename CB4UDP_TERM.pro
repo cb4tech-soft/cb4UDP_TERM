@@ -20,8 +20,7 @@ SOURCES += \
         qml/myscreeninfo.cpp \
         qmlapp.cpp \
         serialmanager.cpp \
-        udpmanager.cpp \
-        viewpage/viewpage.cpp
+        udpmanager.cpp
 
 HEADERS += \
         cb4tools/debug_info.h \
@@ -31,8 +30,7 @@ HEADERS += \
         qmlapp.h \
         script/build_inc.bat \
         serialmanager.h \
-        udpmanager.h \
-        viewpage/viewpage.h
+        udpmanager.h
 
 DEPENDPATH *= $${INCLUDEPATH}
 
@@ -43,6 +41,7 @@ RESOURCES += \
         qrc.qrc
 
 RC_ICONS = qml/icon/logo1.ico
+
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =

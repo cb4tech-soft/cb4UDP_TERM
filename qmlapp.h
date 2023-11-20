@@ -5,7 +5,6 @@
 #include <QObject>
 #include <QtQuick/QQuickView>
   #include <QQmlApplicationEngine>
-#include "viewpage/viewpage.h"
 #include <QSystemTrayIcon>
 
 class QmlApp : public QQmlApplicationEngine
@@ -22,10 +21,8 @@ signals:
 public slots:
 
 private slots:
-    void    viewChanger(ViewPage *page);
 
 private:
-    ViewPage *m_page = nullptr;
 
     QAction *minimizeAction;
     QAction *maximizeAction;
