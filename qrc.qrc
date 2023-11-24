@@ -42,5 +42,6 @@
         <file>qml/AppUdp.qml</file>
         <file>qml/SerialManagerTools/UdpManagerDataViewer.qml</file>
         <file>qml/SerialManagerTools/UdpManagerLineSender.qml</file>
+        <file>qml/AppUDPMenu.qml</file>
     </qresource>
 </RCC>

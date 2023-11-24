@@ -16,7 +16,6 @@ import PluginInfo
 
 import 'qrc:/js/fileStringTools.js' as FileStringTools
 
-// @disable-check M208
 ApplicationWindow {
     id:root
     property bool themeDark: true
@@ -31,6 +30,7 @@ ApplicationWindow {
         }
     }
 
+    menuBar: AppUDPMenu{}
 
     Repeater{
         id: pluginLoader

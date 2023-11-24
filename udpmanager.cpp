@@ -22,24 +22,6 @@ void UdpManager::registerQml()
     qmlRegisterType<UdpManager>("UdpManager", 1, 0, "UdpManager");
 }
 
-QStringList UdpManager::getComList()
-{
-    /*
-    QList<QSerialPortInfo> portList = QSerialPortInfo::availablePorts();
-    foreach (const QSerialPortInfo &info, portList)
-    {
-        result.append(info.portName());
-    }
-*/
-
-    QStringList result;
-    return result;
-}
-
-void UdpManager::test()
-{
-    emit dataAvailable();
-}
 
 void UdpManager::connectToPort()
 {

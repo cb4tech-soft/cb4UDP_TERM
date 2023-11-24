@@ -21,8 +21,6 @@ public:
     explicit UdpManager(QObject *parent = nullptr);
     static void registerQml();
 
-    Q_INVOKABLE void test();
-    Q_INVOKABLE QStringList getComList();
     Q_INVOKABLE void connectToPort();
     Q_INVOKABLE void disconnectFromPort();
     Q_INVOKABLE QString readAll();
