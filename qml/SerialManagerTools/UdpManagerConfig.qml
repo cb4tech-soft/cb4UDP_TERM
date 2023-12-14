@@ -43,8 +43,8 @@ AppRectangle {
     property UdpManager manager
 
     AppLabel {
-        id: label
-        text: "UDP port Settings"
+        id: labelTitle
+        text: "UDP Settings"
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: parent.top
@@ -56,13 +56,20 @@ AppRectangle {
         height:44
     }
 
-
+    AppToolSeparator{
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: labelTitle.bottom
+        anchors.rightMargin: 25
+        anchors.leftMargin: 25
+        height: 11
+    }
     AppLabel {
         id: label2
         text: "Listen IP"
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.top: label.bottom
+        anchors.top: labelTitle.bottom
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
         anchors.topMargin: 5
@@ -80,8 +87,9 @@ AppRectangle {
         anchors.topMargin: 6
         anchors.leftMargin: 10
         placeholderText: qsTr("any")
+        horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignVCenter
     }
-
 
     SpinBox {
         id: textFieldlistenPort
@@ -97,15 +105,26 @@ AppRectangle {
         anchors.leftMargin: 5
         height:40
     }
+    AppToolSeparator{
+        id: propFieldSeparator
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: textFieldlistenPort.bottom
+        anchors.topMargin: 15
+        anchors.rightMargin: 25
+        anchors.leftMargin: 25
+        height: 11
+    }
+
     AppLabel {
         id: label3
         text: "target IP"
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.top: textFieldlistenPort.bottom
+        anchors.top: propFieldSeparator.bottom
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
-        anchors.topMargin: 5
+        anchors.topMargin: 0
         anchors.rightMargin: 0
         anchors.leftMargin: 0
         height:40
@@ -119,6 +138,8 @@ AppRectangle {
         anchors.rightMargin: 10
         anchors.topMargin: 6
         anchors.leftMargin: 10
+        horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignVCenter
         placeholderText: qsTr("")
     }
 
@@ -137,6 +158,15 @@ AppRectangle {
         height:40
     }
 
+    AppToolSeparator{
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: textFieldTargetPort.bottom
+        anchors.topMargin: 10
+        anchors.rightMargin: 25
+        anchors.leftMargin: 25
+        height: 11
+    }
     AppButton{
         id:connectButton
         text:(!serialConfig.manager.isConnected) ? "Open" : "Close"

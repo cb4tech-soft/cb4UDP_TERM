@@ -62,8 +62,6 @@ ApplicationWindow {
                         pluginLoaderItem.item.receiveString(lineData);
                     }
                 }
-
-
             }
 
             Component.onCompleted: {
@@ -104,7 +102,14 @@ ApplicationWindow {
     }
     visible: true
     width:850
-    height:Math.min(MyScreenInfo.getScreenInfo(x,  y).height - 100, 850);
+    //height:Math.min(MyScreenInfo.getScreenInfo(x,  y).height - 100, 850);
+
+    Component.onCompleted: {
+        root.height = Math.min(MyScreenInfo.getScreenInfo(x,  y).height - 100, 850)
+        root.y = MyScreenInfo.getScreenInfo(x,  y).height - root.height - 100
+        if (root.y < 0) root.y = 0
+    }
+
     Donate{
         id:donation
         anchors.fill:parent
@@ -112,10 +117,6 @@ ApplicationWindow {
         visible: false
     }
 
-
-    onThemeDarkChanged: {
-        AppStyle.darkEnable = themeDark
-    }
     UdpManager{
         id: serManager
     }
@@ -124,52 +125,42 @@ ApplicationWindow {
         anchors.fill: parent
         SerialTool.UdpManagerConfig{
             id:serialConfig
-            width:200
-            SplitView.preferredWidth: 140
+            SplitView.preferredWidth: 200
             manager: serManager
         }
 
-        AppRectangle {
-            id: mainSplit
-            height: parent.height
-            SplitView.preferredWidth: 550
-
-            SplitView{
-                id:splitViewSerial
-                anchors.fill: parent
-                orientation: Qt.Vertical
-
-                    SerialTool.UdpManagerDataViewer{
-                        id:dataViewer
-                        SplitView.preferredHeight: parent.height - 80
-                        manager : serManager
-                        onLineDataAppend: function(lineData) {
-                            if (heatmapLoader.active && heatmapLoader.item)
-                            {
-                                heatmapLoader.item.datalineAppend(lineData);
-                            }
-                        }
+        SplitView{
+            id:splitViewSerial
+            orientation: Qt.Vertical
+            SerialTool.UdpManagerDataViewer{
+                id:dataViewer
+                SplitView.fillHeight: true
+                manager : serManager
+                onLineDataAppend: function(lineData) {
+                    if (heatmapLoader.active && heatmapLoader.item)
+                    {
+                        heatmapLoader.item.datalineAppend(lineData);
                     }
+                }
+            }
 
-                    SerialTool.UdpManagerLineSender {
-                        id: serialManagerLineSender
-                        y: 0
+            SerialTool.UdpManagerLineSender {
+                id: serialManagerLineSender
+                y: 0
 
-                        SplitView.preferredHeight: 80
-                        manager : serManager
-                        onSendStringData: function(stringData){
-                            dataViewer.sendString(stringData);
-                            if (root.clearOnSend)
-                                serialManagerLineSender.textInput = ""
-                        }
-                        onSendHexaData: function(hexaData){ dataViewer.send(hexaData)
-                            if (root.clearOnSend)
-                                serialManagerLineSender.textInput = "" }
-                    }
+                SplitView.preferredHeight: 80
+                manager : serManager
+                onSendStringData: function(stringData){
+                    dataViewer.sendString(stringData);
+                    if (root.clearOnSend)
+                        serialManagerLineSender.textInput = ""
+                }
+                onSendHexaData: function(hexaData){ dataViewer.send(hexaData)
+                    if (root.clearOnSend)
+                        serialManagerLineSender.textInput = "" }
             }
         }
     }
-
 
     Platform.SystemTrayIcon {
         id:sysTray
