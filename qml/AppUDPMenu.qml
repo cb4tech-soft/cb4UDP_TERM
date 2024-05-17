@@ -40,32 +40,6 @@ MenuBar {
    }
    Menu {
        title: "Addon"
-       Action { text: "Heatmap"
-           onTriggered: {
-               console.log("opening heatmap")
-            heatmapLoader.source = "Heatmap.qml"
-               heatmapLoader.active = true
-               heatmapLoader.item.visible = true
-               var posX = root.x + root.width
-               var posY = root.y
-               var screenRect = MyScreenInfo.getScreenInfo( root.x ,  root.y)
-               if (posX + heatmapLoader.item.width >= screenRect.x + screenRect.width - 50)
-               {
-                   console.log("update windows pos ", posX + heatmapLoader.item.width)
-                   posX = screenRect.x + screenRect.width - heatmapLoader.item.width - 50
-               }
-               if (posY + heatmapLoader.item.height >= screenRect.y + screenRect.height - 50)
-               {
-                   posY = screenRect.y + screenRect.height - heatmapLoader.item.height-50
-               }
-
-               console.log("windows pos = ", posX)
-               heatmapLoader.item.x = posX
-               heatmapLoader.item.y = posY
-               //heatmapLoader.item.closing = Qt.binding(function() { console.log("closing !!!") })
-
-           }
-       }
        Action { text: "CustomButton"
 
            onTriggered: {

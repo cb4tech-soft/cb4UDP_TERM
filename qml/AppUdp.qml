@@ -71,19 +71,6 @@ ApplicationWindow {
     }
 
     Loader{
-        id: heatmapLoader
-        active: false
-        function deactivate(){
-            heatmapLoader.active = false
-            console.log("deactivate")
-            heatmapLoader.source = ""
-        }
-        Connections {
-            target: heatmapLoader.item
-            function onClosing() {heatmapLoader.deactivate()}
-        }
-    }
-    Loader{
         id: customButton
         active: false
         function deactivate(){
@@ -128,7 +115,6 @@ ApplicationWindow {
             SplitView.preferredWidth: 200
             manager: serManager
         }
-
         SplitView{
             id:splitViewSerial
             orientation: Qt.Vertical
